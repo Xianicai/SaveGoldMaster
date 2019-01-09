@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.stx.xhb.xbanner.XBanner
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
+        app:AutoPlayTime="2000"
+        app:pointNormal="@drawable/banner_normal"
+        app:pointSelect="@drawable/banner_select"
+        app:pointsVisibility="true"
+        app:pointsPosition="CENTER"
+        app:pointContainerPosition="BOTTOM"
+        app:pageChangeDuration="800"/>

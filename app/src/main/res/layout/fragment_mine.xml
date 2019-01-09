@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent" android:layout_height="match_parent"
+              android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:gravity="center_horizontal"
+                  android:background="@color/bg_blue">
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:id="@+id/mLayoutLogin"
+                      android:visibility="visible">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="Hi～欢迎来到存金通"
+                      android:textSize="17sp"
+                      android:layout_marginTop="94dp"
+                      android:textColor="@color/color_333333"
+                      android:gravity="center_horizontal"/>
+            <com.example.zhanglibin.savegoldmaster.utils.view.BorderView
+                    android:id="@+id/mButtonLogin"
+                    android:layout_width="125dp"
+                    android:layout_height="40dp"
+                    app:borderViewRounded="true"
+                    android:layout_marginTop="20dp"
+                    app:borderViewBackgroundColor="@color/color_F2B643"
+                    android:layout_marginBottom="31dp"
+                    app:borderViewText="立即登录"
+                    android:layout_gravity="center_horizontal"
+                    app:borderViewTextSize="17sp"
+                    app:borderViewTextColor="@color/white"/>
+        </LinearLayout>
+        <LinearLayout
+                android:id="@+id/mLayoutUserView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+            <com.example.zhanglibin.savegoldmaster.utils.glide.GlideImageView
+                    android:layout_width="90dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="90dp"/>
+            <TextView
+                    android:id="@+id/mTvName"
+                    android:textSize="16sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/color_333333"
+                    android:text="夏尼采"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <TextView
+                    android:id="@+id/mTvPhoneNum"
+                    android:textSize="12sp"
+                    android:textColor="@color/color_666666"
+                    android:text="17600567656"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="31dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+    <RelativeLayout
+            android:id="@+id/mLayoutGold"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white"
+            android:gravity="center_vertical">
+        <TextView android:layout_width="wrap_content"
+                  android:text="我的黄金(克)"
+                  android:paddingLeft="20dp"
+                  android:textSize="14sp"
+                  android:gravity="center_vertical"
+                  android:textColor="@color/color_333333"
+                  android:layout_height="match_parent"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:text="0.0"
+                  android:textSize="17sp"
+                  android:drawablePadding="10dp"
+                  android:gravity="center_vertical"
+                  android:layout_alignParentRight="true"
+                  android:layout_marginRight="22dp"
+                  android:drawableRight="@mipmap/icon_arrows_right"
+                  android:textColor="@color/color_EDA835"
+        />
+    </RelativeLayout>
+    <View android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:layout_marginHorizontal="20dp"
+          android:background="@color/color_EEEEEE"/>
+    <RelativeLayout
+            android:id="@+id/mLayoutRecycleOrder"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white"
+            android:gravity="center_vertical">
+        <TextView android:layout_width="wrap_content"
+                  android:text="回收订单"
+                  android:paddingLeft="20dp"
+                  android:textSize="14sp"
+                  android:gravity="center_vertical"
+
+                  android:textColor="@color/color_333333"
+                  android:layout_height="match_parent"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:textSize="17sp"
+                  android:drawablePadding="10dp"
+                  android:layout_alignParentRight="true"
+                  android:layout_marginRight="22dp"
+                  android:gravity="center_vertical"
+                  android:drawableRight="@mipmap/icon_arrows_right"
+                  android:textColor="@color/color_EDA835"
+        />
+    </RelativeLayout>
+    <View android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:layout_marginHorizontal="20dp"
+          android:background="@color/color_EEEEEE"/>
+    <RelativeLayout
+            android:id="@+id/mLayoutLoveGoldOrder"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/white"
+            android:gravity="center_vertical">
+        <TextView android:layout_width="wrap_content"
+                  android:text="爱有金订单"
+                  android:paddingLeft="20dp"
+                  android:textSize="14sp"
+                  android:gravity="center_vertical"
+                  android:textColor="@color/color_333333"
+                  android:layout_height="match_parent"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:textSize="17sp"
+                  android:drawablePadding="10dp"
+                  android:layout_alignParentRight="true"
+                  android:layout_marginRight="22dp"
+                  android:gravity="center_vertical"
+                  android:drawableRight="@mipmap/icon_arrows_right"
+                  android:textColor="@color/color_EDA835"/>
+    </RelativeLayout>
+    <RelativeLayout
+            android:id="@+id/mLayoutBalance"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:gravity="center_vertical">
+        <TextView android:layout_width="wrap_content"
+                  android:text="账户余额"
+                  android:paddingLeft="20dp"
+                  android:textSize="14sp"
+                  android:gravity="center_vertical"
+                  android:textColor="@color/color_333333"
+                  android:layout_height="match_parent"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:textSize="17sp"
+                  android:drawablePadding="10dp"
+                  android:layout_alignParentRight="true"
+                  android:layout_marginRight="22dp"
+                  android:gravity="center_vertical"
+                  android:drawableRight="@mipmap/icon_arrows_right"
+                  android:textColor="@color/color_EDA835"
+        />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/mRecyclerView"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <TextView android:layout_width="match_parent"
+              android:layout_height="56dp"
+              android:gravity="center"
+              android:text="客服电话:4008-196-199"
+              android:textSize="16sp"
+              android:textColor="@color/color_333333"/>
+</LinearLayout>
