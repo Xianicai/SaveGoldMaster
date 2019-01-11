@@ -15,6 +15,8 @@ import com.stx.xhb.xbanner.XBanner
 import com.savegoldmaster.home.view.MainActivity
 import com.bumptech.glide.Glide
 import com.example.zhanglibin.savegoldmaster.R
+import com.savegoldmaster.home.model.bean.NoticeBean
+import kotlinx.android.synthetic.main.layout_home_notice.view.*
 
 
 class HomeAdapter(context: Context, datas: ArrayList<Object>) :
@@ -22,6 +24,7 @@ class HomeAdapter(context: Context, datas: ArrayList<Object>) :
         override fun getLayoutId(item: Object, position: Int): Int {
             return when (position) {
                 0 -> R.layout.layout_home_banner
+                1 -> R.layout.layout_home_notice
                 else -> R.layout.layout_home_banner
             }
         }
@@ -30,6 +33,13 @@ class HomeAdapter(context: Context, datas: ArrayList<Object>) :
         when (holder.adapterPosition) {
             0 -> {
                 buildBanner(item, holder)
+            }
+            1 -> {
+                val noticeBean = item as NoticeBean.ContentBean.ListBean
+                holder.itemView.mTvNotice.apply {
+                    text = noticeBean.content
+                    isSelected = true
+                }
             }
         }
     }

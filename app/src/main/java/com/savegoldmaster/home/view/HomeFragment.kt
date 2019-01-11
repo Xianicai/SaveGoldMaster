@@ -6,6 +6,7 @@ import android.view.View
 import com.example.zhanglibin.savegoldmaster.R
 import com.savegoldmaster.base.view.BaseMVPFragment
 import com.savegoldmaster.home.model.bean.BannerBean
+import com.savegoldmaster.home.model.bean.NoticeBean
 import com.savegoldmaster.home.presenter.Contract.HomeContract
 import com.savegoldmaster.home.presenter.HomePresenterImpl
 import com.savegoldmaster.home.presenter.UserPresenterImpl
@@ -15,7 +16,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView, View.OnClickListener {
-
     companion object {
         fun newInstance(): HomeFragment {
             return HomeFragment()
@@ -40,6 +40,8 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
 
     private fun initData() {
         homePresenterImpl?.getBanner(1, 5, 2)
+        homePresenterImpl?.getNotice(1, 10, 1)
+//        homePresenterImpl?.getMessageTips()
     }
 
     override fun createPresenter(): HomePresenterImpl {
@@ -58,7 +60,28 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
 
     override fun getBannerData(bean: BannerBean) {
         listBean?.add(0, bean as Object)
-        homeAdapter?.notifyItemChanged(1)
+        homeAdapter?.notifyDataSetChanged()
 
+    }
+
+    override fun getNotice(noticeBean: NoticeBean) {
+        listBean?.add(1, noticeBean.content.list[0] as Object)
+        homeAdapter?.notifyDataSetChanged()
+
+    }
+
+    override fun getMessageTips() {
+    }
+
+    override fun getRecycleGold() {
+    }
+
+    override fun getGoldPrice() {
+    }
+
+    override fun getNewInformation() {
+    }
+
+    override fun getNearbyShop() {
     }
 }

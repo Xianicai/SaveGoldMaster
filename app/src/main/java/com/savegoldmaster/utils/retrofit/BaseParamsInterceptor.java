@@ -34,9 +34,10 @@ public class BaseParamsInterceptor implements Interceptor {
      */
     private Request addParam(Request oldRequest) {
         String authorization = "";
+        String defAuthorization = "ff80808163ce07740163ce08d6af0001_61210524b228443fbacc147cef000b57";
         if (BaseApplication.Companion.getInstance() != null) {
             SharedPreferencesHelper preferencesHelper = new SharedPreferencesHelper(BaseApplication.Companion.getInstance(), "UserBean");
-            authorization = preferencesHelper.getSharedPreference("authorization", "").toString().trim();
+            authorization = preferencesHelper.getSharedPreference("authorization", defAuthorization).toString().trim();
         }
         HttpUrl.Builder builder = oldRequest.url()
                 .newBuilder()

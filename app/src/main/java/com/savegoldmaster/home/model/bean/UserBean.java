@@ -1,9 +1,13 @@
 package com.savegoldmaster.home.model.bean;
 
 import com.savegoldmaster.base.BaseBean;
+import io.objectbox.annotation.Entity;
+import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Index;
 
 public class UserBean extends BaseBean {
 
+    private long id;
     /**
      * content : {"cashBalance":0,"cashBalanceStr":"0.00","cashFrozenBalanceStr":"0","cashNoBalance":0,"cashNoBalanceStr":"0.0000","demandGoldBalance":0,"demandGoldBalanceStr":"0.0000","fixedGoldBalance":0,"fixedGoldBalanceStr":"0.0000","goldBalance":0,"goldBalanceStr":"0.0000","goldMoney":0,"goldMoneyStr":"0.0000","isHandheldIDphoto":0,"realnamed":0,"telephone":"17600567656","userName":"176****7656"}
      */
@@ -55,6 +59,7 @@ public class UserBean extends BaseBean {
         private int isHandheldIDphoto;
         private int realnamed;
         private String telephone;
+        @Index
         private String userName;
 
         public double getCashBalance() {

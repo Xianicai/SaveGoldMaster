@@ -1,5 +1,6 @@
-package com.example.zhanglibin.bdmoe.adapter
+package com.savegoldmaster.utils.adapter
+
 
 interface OnItemLongClickListener {
-    fun onItemLongClick(position: Int):Boolean
+    fun onItemLongClick(position: Int): Boolean
 }
