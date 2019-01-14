@@ -43,19 +43,24 @@ class Urls {
         const val GET_GOLD_PRICE = "$BASE_URL/v3/price/queryGoldPrice"
 
         /**
-         * 获取咨询
+         * 获取资讯
          */
         const val GET_NEW_INFORMATION = "$BASE_URL/v3/content/queryNewsPager"
 
         /**
          * 获取附近店铺
          */
-        const val GET_NEARBY_SHOP = "$BASE_URL/personal/store_list"
+        const val GET_NEARBY_SHOP = "$BASE_URL/v3/recycleOrder/personal/store_list"
 
         /**
          * 获取通知
          */
         const val GET_NOTICE = "$BASE_URL/v3/member/queryPageMsg"
+
+        /**
+         * 首页黄金回收信息
+         */
+        const val GET_GOLD_NEW_ODER = "$BASE_URL/v3/recycleOrder/newOrder"
     }
 
 }

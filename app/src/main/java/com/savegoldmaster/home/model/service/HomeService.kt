@@ -2,9 +2,7 @@ package com.savegoldmaster.home.model.service
 
 import com.savegoldmaster.base.BaseBean
 import com.savegoldmaster.common.Urls
-import com.savegoldmaster.home.model.bean.BannerBean
-import com.savegoldmaster.home.model.bean.NoticeBean
-import com.savegoldmaster.home.model.bean.UserBean
+import com.savegoldmaster.home.model.bean.*
 import com.savegoldmaster.utils.retrofit.HttpResult
 import io.reactivex.Observable
 import retrofit2.http.*
@@ -44,7 +42,7 @@ interface HomeService {
      * @return
      */
     @GET(Urls.GET_RECYCLE_GOLD)
-    fun getRecycleGold(): Observable<BaseBean>
+    fun getRecycleGold(): Observable<RecyclerGoldBean>
 
     /**
      * 获取金价
@@ -52,7 +50,7 @@ interface HomeService {
      * @return
      */
     @GET(Urls.GET_GOLD_PRICE)
-    fun getGoldPrice(): Observable<BaseBean>
+    fun getGoldPrice(): Observable<GoldPriceBean>
 
     /**
      * 获取资讯
@@ -60,7 +58,10 @@ interface HomeService {
      * @return
      */
     @GET(Urls.GET_NEW_INFORMATION)
-    fun getNewInformation(): Observable<BaseBean>
+    fun getNewInformation(
+        @Query("pageNum") pageNum: Int,
+        @Query("pageSize") pageSize: Int
+    ): Observable<InformationBean>
 
     /**
      * 获取附近店铺
@@ -71,10 +72,10 @@ interface HomeService {
     fun getNearbyShop(
         @Query("lat") lat: String,
         @Query("lng") lng: String
-    ): Observable<BaseBean>
+    ): Observable<NearbyShopBean>
 
     /**
-     * 获取附近店铺
+     * 获取首页公告
      * @param   type  0黄金资讯，1系统公告，2营销活动，3用户消息
      * @return
      */
@@ -84,4 +85,10 @@ interface HomeService {
         @Query("pageSize") pageSize: Int,
         @Query("type") type: Int
     ): Observable<NoticeBean>
+
+    /**
+     * 获取首页滚动黄金订单
+     */
+    @GET(Urls.GET_GOLD_NEW_ODER)
+    fun getGoldNewOder(): Observable<UserOderBean>
 }

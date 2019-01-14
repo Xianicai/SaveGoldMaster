@@ -4,8 +4,7 @@ import com.savegoldmaster.account.model.bean.LoginBean
 import com.savegoldmaster.account.model.impl.LoginModelImpl
 import com.savegoldmaster.base.BaseBean
 import com.savegoldmaster.base.presenter.BasePresenterImpl
-import com.savegoldmaster.home.model.bean.BannerBean
-import com.savegoldmaster.home.model.bean.NoticeBean
+import com.savegoldmaster.home.model.bean.*
 import com.savegoldmaster.home.model.impl.HomeModelImpl
 import com.savegoldmaster.home.presenter.Contract.HomeContract
 import com.savegoldmaster.home.presenter.Contract.LoginContract
@@ -42,44 +41,44 @@ class HomePresenterImpl : BasePresenterImpl<HomeContract.HomeView>(), HomeContra
 
     override fun getRecycleGold() {
         homeModelImpl.getRecycleGold()
-            .compose(ThreadTransformer<BaseBean>())
-            .subscribe(object : RespondObserver<BaseBean>() {
-                override fun onSuccess(result: BaseBean?) {
+            .compose(ThreadTransformer<RecyclerGoldBean>())
+            .subscribe(object : RespondObserver<RecyclerGoldBean>() {
+                override fun onSuccess(result: RecyclerGoldBean?) {
                     super.onSuccess(result)
-                    mView?.getRecycleGold()
+                    mView?.getRecycleGold(result!!)
                 }
             })
     }
 
     override fun getGoldPrice() {
         homeModelImpl.getGoldPrice()
-            .compose(ThreadTransformer<BaseBean>())
-            .subscribe(object : RespondObserver<BaseBean>() {
-                override fun onSuccess(result: BaseBean?) {
+            .compose(ThreadTransformer<GoldPriceBean>())
+            .subscribe(object : RespondObserver<GoldPriceBean>() {
+                override fun onSuccess(result: GoldPriceBean?) {
                     super.onSuccess(result)
-                    mView?.getGoldPrice()
+                    mView?.getGoldPrice(result!!)
                 }
             })
     }
 
     override fun getNewInformation() {
         homeModelImpl.getNewInformation()
-            .compose(ThreadTransformer<BaseBean>())
-            .subscribe(object : RespondObserver<BaseBean>() {
-                override fun onSuccess(result: BaseBean?) {
+            .compose(ThreadTransformer<InformationBean>())
+            .subscribe(object : RespondObserver<InformationBean>() {
+                override fun onSuccess(result: InformationBean?) {
                     super.onSuccess(result)
-                    mView?.getNewInformation()
+                    mView?.getNewInformation(result!!)
                 }
             })
     }
 
     override fun getNearbyShop(lat: String, lng: String) {
         homeModelImpl.getNearbyShop(lat, lng)
-            .compose(ThreadTransformer<BaseBean>())
-            .subscribe(object : RespondObserver<BaseBean>() {
-                override fun onSuccess(result: BaseBean?) {
+            .compose(ThreadTransformer<NearbyShopBean>())
+            .subscribe(object : RespondObserver<NearbyShopBean>() {
+                override fun onSuccess(result: NearbyShopBean?) {
                     super.onSuccess(result)
-                    mView?.getNearbyShop()
+                    mView?.getNearbyShop(result!!)
                 }
             })
     }
@@ -91,6 +90,17 @@ class HomePresenterImpl : BasePresenterImpl<HomeContract.HomeView>(), HomeContra
                 override fun onSuccess(result: NoticeBean?) {
                     super.onSuccess(result)
                     mView?.getNotice(result!!)
+                }
+            })
+    }
+
+    override fun getGoldNewOder() {
+        homeModelImpl.getGoldNewOder()
+            .compose(ThreadTransformer<UserOderBean>())
+            .subscribe(object : RespondObserver<UserOderBean>() {
+                override fun onSuccess(result: UserOderBean?) {
+                    super.onSuccess(result)
+                    mView?.getGoldNewOder(result!!)
                 }
             })
     }

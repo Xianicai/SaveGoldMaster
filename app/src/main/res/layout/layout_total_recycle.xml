@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_horizontal"
+              android:background="@color/white"
+              android:orientation="vertical">
+    <TextView android:layout_width="wrap_content"
+              android:text="存金通已累计帮助用户回收黄金"
+              android:textColor="@color/color_999999"
+              android:textSize="13sp"
+              android:includeFontPadding="false"
+              android:layout_height="wrap_content"/>
+    <TextView
+            android:id="@+id/mTvTotalRecycle"
+            android:layout_width="wrap_content"
+            android:text="999吨999千克"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:includeFontPadding="false"
+            android:layout_marginTop="23dp"
+            android:layout_height="wrap_content"/>
+</LinearLayout>

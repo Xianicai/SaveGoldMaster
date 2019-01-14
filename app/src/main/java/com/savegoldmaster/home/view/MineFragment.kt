@@ -118,10 +118,6 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
         when (v) {
             mButtonLogin -> {
                 LoginActivity.start(activity!!)
-//                val location = LocationUtils.getInstance(context).showLocation()
-//                if (location != null) {
-//                    ToastUtil.showMessage("纬度：" + location.latitude + "经度：" + location.longitude)
-//                }
             }
             mTvServiceTel -> {
 
