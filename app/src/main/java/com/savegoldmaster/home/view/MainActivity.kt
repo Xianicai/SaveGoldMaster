@@ -3,6 +3,7 @@ package com.savegoldmaster.home.view
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v4.app.FragmentManager
@@ -11,22 +12,21 @@ import com.savegoldmaster.base.view.BaseMVPActivity
 import com.savegoldmaster.home.presenter.Contract.UserContract
 import com.savegoldmaster.home.presenter.UserPresenterImpl
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
+import android.view.Window
+import android.view.WindowManager
 import com.ashokvarma.bottomnavigation.BottomNavigationItem
 import com.ashokvarma.bottomnavigation.BottomNavigationBar
 import com.ashokvarma.bottomnavigation.BottomNavigationBar.*
 import com.example.zhanglibin.savegoldmaster.R
+import com.example.zhanglibin.savegoldmaster.R.id.mBottomNavigationBar
 import com.savegoldmaster.home.model.bean.UserBean
 import com.savegoldmaster.utils.permissionUtil.PermissionInterface
 import kotlinx.android.synthetic.main.activity_main.*
 import com.savegoldmaster.utils.permissionUtil.PermissionHelper
 
 
-class MainActivity : BaseMVPActivity<UserPresenterImpl>(), UserContract.UserView,
-    BottomNavigationBar.OnTabSelectedListener, PermissionInterface {
-    override fun getUserDetail(userBean: UserBean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
+class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListener, PermissionInterface {
 
     private val mTitles = arrayOf("首页", "爱有金", "我的")
     private var mHomeFragment: HomeFragment? = null
@@ -38,32 +38,31 @@ class MainActivity : BaseMVPActivity<UserPresenterImpl>(), UserContract.UserView
 
 
     companion object {
-        fun start(context: Context, userId: String) {
-            context.startActivity(
-                Intent(context, MainActivity.javaClass)
-                    .putExtra("userId", userId)
+        fun start(context: Context) {
+            context.startActivity(Intent(context, MainActivity::class.java)
             )
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        userId = intent.getStringExtra("userId")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        //取消标题栏
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        //取消状态栏
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
+        setContentView(R.layout.activity_main)
+        initViews()
+
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_main
-    }
-
-    override fun createPresenter(): UserPresenterImpl {
-        return UserPresenterImpl()
-    }
-
-    override fun initViews(savedInstanceState: Bundle?) {
+    private fun initViews() {
         //初始化并发起权限申请
         mPermissionHelper = PermissionHelper(this, this)
         mPermissionHelper?.requestPermissions()
-
         mBottomNavigationBar
             .setActiveColor(R.color.bg_yellow)
             .setInActiveColor(R.color.black)
@@ -80,7 +79,7 @@ class MainActivity : BaseMVPActivity<UserPresenterImpl>(), UserContract.UserView
                     .setInactiveIcon(ContextCompat.getDrawable(this, R.mipmap.ic_home_home_normal))
             )
             .addItem(
-                BottomNavigationItem(R.mipmap.ic_home_gold_normal, mTitles[1])
+                BottomNavigationItem(R.mipmap.ic_home_gold_select, mTitles[1])
                     .setInactiveIcon(ContextCompat.getDrawable(this, R.mipmap.ic_home_gold_normal))
             )
             .addItem(

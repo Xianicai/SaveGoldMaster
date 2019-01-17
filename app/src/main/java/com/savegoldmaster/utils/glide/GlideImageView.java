@@ -61,10 +61,9 @@ public class GlideImageView extends android.support.v7.widget.AppCompatImageView
     }
 
     /**
-     *
      * 设置圆角图片
      */
-    public void setRoundImage(String url, int round) {
+    public void setRoundsImage(String url, int round) {
         if (mDefaultImageResId != 0) {
 
             Glide.with(mCon)
@@ -74,6 +73,22 @@ public class GlideImageView extends android.support.v7.widget.AppCompatImageView
                     //设置缓存
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .transform(new GlideRoundTransform(mCon, round))
+                    .into(this);
+        }
+    }
+
+    /**
+     * 设置圆形图片
+     */
+    public void setRoundedImage(String url) {
+        if (mDefaultImageResId != 0) {
+            Glide.with(mCon)
+                    .load(url)
+                    .placeholder(mDefaultImageResId)
+                    .error(mDefaultImageResId)
+                    //设置缓存
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .transform(new GlideCircleTransform(mCon))
                     .into(this);
         }
 

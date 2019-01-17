@@ -2,6 +2,7 @@ package com.savegoldmaster.account
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v4.content.ContextCompat
@@ -25,6 +26,7 @@ import com.savegoldmaster.utils.SharedPreferencesHelper
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
 import com.savegoldmaster.utils.rxbus.RxEvent
+import com.tencent.bugly.crashreport.CrashReport
 
 
 class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.LoginView, View.OnClickListener {
@@ -68,6 +70,8 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (mEdPhoneNum.text.toString().trim().length == 11 && mEdPassword.text.toString().trim().length == 6) {
                     mTvLogin.setBackgroundColor(ContextCompat.getColor(this@LoginActivity, R.color.color_DDC899))
+                } else {
+                    mTvLogin.setBackgroundColor(Color.parseColor("#80DDC899"))
                 }
             }
 
@@ -82,6 +86,8 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (mEdPhoneNum.text.toString().trim().length == 11 && mEdPassword.text.toString().trim().length == 6) {
                     mTvLogin.setBackgroundColor(ContextCompat.getColor(this@LoginActivity, R.color.color_DDC899))
+                } else {
+                    mTvLogin.setBackgroundColor(Color.parseColor("#80DDC899"))
                 }
             }
 
@@ -224,5 +230,10 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         val pattern = Pattern.compile("^((13[0-9])|(14[5,7,9])|(15[^4])|(18[0-9])|(17[0,1,3,5,6,7,8]))\\d{8}$")
         val matcher = pattern.matcher(str)
         return matcher.matches()
+    }
+
+    override fun onDestroy() {
+        start = null
+        super.onDestroy()
     }
 }

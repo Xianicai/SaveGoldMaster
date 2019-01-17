@@ -1,24 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <ImageView
-            android:id="@+id/mImageMsg"
-            android:layout_width="wrap_content"
-            android:src="@mipmap/ic_home_msg"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="32dp"
-            android:layout_marginRight="20dp"
-            android:layout_height="wrap_content"/>
-    <com.example.zhanglibin.bdmoe.recyclerview.WrapRecyclerView
-            android:id="@+id/mRecyclerView"
-            android:layout_width="0dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_height="wrap_content"/>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-</android.support.constraint.ConstraintLayout>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
+            <com.stx.xhb.xbanner.XBanner
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="275dp"
+                    app:AutoPlayTime="2000"
+                    app:pointNormal="@drawable/banner_normal"
+                    app:pointSelect="@drawable/banner_select"
+                    app:pointsVisibility="true"
+                    app:pointsPosition="CENTER"
+                    app:pointContainerPosition="BOTTOM"
+                    app:pageChangeDuration="800"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
+            <RelativeLayout
+                    android:id="@+id/mLayoutNotice"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:background="#1AF2B643">
+                <ImageView
+                        android:id="@+id/mImageNotice"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/ic_home_notice"
+                        android:layout_marginLeft="20dp"/>
+                <TextView
+                        android:id="@+id/mTvNotice"
+                        android:layout_width="50dp"
+                        android:layout_toRightOf="@+id/mImageNotice"
+                        android:layout_toLeftOf="@+id/mImageClose"
+                        android:layout_centerVertical="true"
+                        android:layout_marginHorizontal="15dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_333333"
+                        android:textSize="12sp"
+                        android:ellipsize="marquee"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"/>
+                <ImageView
+                        android:id="@+id/mImageClose"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/ic_home_close_notice"
+                        android:layout_marginRight="20dp"
+                        android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+            <com.example.zhanglibin.bdmoe.recyclerview.WrapRecyclerView
+                    android:id="@+id/mRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <ImageView
+                android:id="@+id/mImageMsg"
+                android:layout_width="22dp"
+                android:src="@mipmap/ic_home_msg"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="32dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="22dp"
+                android:visibility="visible"/>
+    </RelativeLayout>
+</ScrollView>
+

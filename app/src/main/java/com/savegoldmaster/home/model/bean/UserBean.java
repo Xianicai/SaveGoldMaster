@@ -6,12 +6,11 @@ import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Index;
 
 public class UserBean extends BaseBean {
-
+    @Id
     private long id;
     /**
      * content : {"cashBalance":0,"cashBalanceStr":"0.00","cashFrozenBalanceStr":"0","cashNoBalance":0,"cashNoBalanceStr":"0.0000","demandGoldBalance":0,"demandGoldBalanceStr":"0.0000","fixedGoldBalance":0,"fixedGoldBalanceStr":"0.0000","goldBalance":0,"goldBalanceStr":"0.0000","goldMoney":0,"goldMoneyStr":"0.0000","isHandheldIDphoto":0,"realnamed":0,"telephone":"17600567656","userName":"176****7656"}
      */
-
     private ContentBean content;
 
     public ContentBean getContent() {
@@ -21,7 +20,6 @@ public class UserBean extends BaseBean {
     public void setContent(ContentBean content) {
         this.content = content;
     }
-
     public static class ContentBean {
         /**
          * cashBalance : 0.0
@@ -61,6 +59,9 @@ public class UserBean extends BaseBean {
         private String telephone;
         @Index
         private String userName;
+        private String name = "";
+        private String avatar;
+        private int recycleOrderTBC = 0;
 
         public double getCashBalance() {
             return cashBalance;
@@ -196,6 +197,30 @@ public class UserBean extends BaseBean {
 
         public void setUserName(String userName) {
             this.userName = userName;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
+        }
+
+        public int getRecycleOrderTBC() {
+            return recycleOrderTBC;
+        }
+
+        public void setRecycleOrderTBC(int recycleOrderTBC) {
+            this.recycleOrderTBC = recycleOrderTBC;
         }
     }
 }

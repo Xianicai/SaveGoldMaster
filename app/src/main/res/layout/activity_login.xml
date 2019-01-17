@@ -5,8 +5,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:context=".account.LoginActivity">
+        android:background="@color/white"
+        android:fitsSystemWindows="true">
     <ImageView
             android:id="@+id/mImageClose"
             android:layout_width="22dp"
@@ -18,7 +18,7 @@
             android:layout_marginTop="34dp"/>
     <ImageView android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:src="@mipmap/ic_launcher"
+               android:src="@mipmap/ic_login_logo"
                app:layout_constraintLeft_toLeftOf="parent"
                app:layout_constraintRight_toRightOf="parent"
                app:layout_constraintTop_toTopOf="parent"
@@ -105,7 +105,7 @@
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginRight="28dp"
             app:layout_constraintBottom_toBottomOf="@+id/mEdPhoneNum"
-            android:src="@mipmap/ic_hidden_password"/>
+            android:src="@mipmap/ic_home_close_notice"/>
     <EditText
             android:id="@+id/mEdPassword"
             android:layout_width="0dp"
@@ -189,7 +189,7 @@
             app:layout_constraintRight_toRightOf="parent"
             android:text="登录"
             android:layout_marginHorizontal="20dp"
-            android:background="@color/color_DDC899"
+            android:background="#80DDC899"
             android:layout_marginTop="100dp"
             android:gravity="center"
             android:textColor="@color/color_EEEEEE"

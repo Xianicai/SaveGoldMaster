@@ -10,9 +10,19 @@
             android:layout_height="30dp"
             app:borderViewRounded="true"
             app:borderViewBackgroundColor="@color/color_F5F5F5">
+        <ImageView
+                android:id="@+id/mImageIcGold"
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                   android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+        android:src="@mipmap/ic_home_gold"/>
         <ViewFlipper
                 android:id="@+id/pushUpFlipper"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"/>
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/mImageIcGold"/>
     </com.savegoldmaster.utils.view.BorderView>
 </LinearLayout>

@@ -1,20 +1,20 @@
 package com.savegoldmaster.home.view
 
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.example.zhanglibin.savegoldmaster.R
 import com.savegoldmaster.base.view.BaseMVPFragment
 import com.savegoldmaster.home.model.bean.*
 import com.savegoldmaster.home.presenter.Contract.HomeContract
 import com.savegoldmaster.home.presenter.HomePresenterImpl
-import com.savegoldmaster.home.presenter.UserPresenterImpl
 import com.savegoldmaster.home.view.adapter.HomeAdapter
-import com.savegoldmaster.utils.LocationUtils
+import com.savegoldmaster.utils.ListUtil
 import com.savegoldmaster.utils.ToastUtil
+import com.savegoldmaster.utils.glide.GlideImageView
 import kotlinx.android.synthetic.main.fragment_home.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView, View.OnClickListener {
@@ -35,9 +35,11 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
 
     override fun initView(view: View?) {
         mImageMsg.setOnClickListener(this)
+        mImageClose.setOnClickListener(this)
         listBean = ArrayList()
+        mRecyclerView.isNestedScrollingEnabled = false
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        homeAdapter = HomeAdapter(this.context!!, listBean!!)
+        homeAdapter = HomeAdapter(listBean!!)
         mRecyclerView.adapter = homeAdapter
         mRecyclerView.addFooterView(
             layoutInflater.inflate(
@@ -57,7 +59,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
 //        if (location != null) {
 //            ToastUtil.showMessage("纬度：" + location.latitude + "经度：" + location.longitude)
 //        }
-        homePresenterImpl?.getNearbyShop("39.90", "116.39")
+        homePresenterImpl?.getNearbyShop("","")
         homePresenterImpl?.getNewInformation()
 //        homePresenterImpl?.getMessageTips()
     }
@@ -72,20 +74,23 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
             mImageMsg -> {
 
             }
+            mImageClose -> {
+                mLayoutNotice.visibility = View.GONE
+            }
         }
 
     }
 
     override fun getBannerData(bean: BannerBean) {
-        listBean?.add(bean as Object)
-        homeAdapter?.notifyDataSetChanged()
-
-
+        buildBanner(bean)
     }
 
     override fun getNotice(noticeBean: NoticeBean) {
-        listBean?.add(noticeBean.content.list[0] as Object)
-        homeAdapter?.notifyDataSetChanged()
+        if (noticeBean.content != null && ListUtil.isNotEmpty(noticeBean.content.list)) {
+            buildNotice(noticeBean.content.list[0])
+        }else{
+            mLayoutNotice.visibility = View.GONE
+        }
     }
 
     override fun getGoldPrice(goldPriceBean: GoldPriceBean) {
@@ -117,5 +122,37 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     override fun getNewInformation(informationBean: InformationBean) {
         listBean?.add(informationBean as Object)
         homeAdapter?.notifyDataSetChanged()
+    }
+
+    fun buildBanner(bannerBean: BannerBean) {
+        val views = mutableListOf<GlideImageView>()
+        val imageUrls = mutableListOf<XBannerBean>()
+        for (i in 0 until bannerBean.content.size) {
+            val mImageView = GlideImageView(context)
+            mImageView.setDefaultImage(R.mipmap.ic_launcher)
+            mImageView.scaleType = ImageView.ScaleType.FIT_XY
+            mImageView.setImage(bannerBean.content[i].imgUrl)
+            imageUrls.add(XBannerBean(bannerBean.content[i].imgUrl))
+            views.add(mImageView)
+        }
+
+        banner.apply {
+            setBannerData(imageUrls)
+            loadImage { banner, model, view, position ->
+                Glide.with(context).load((model as XBannerBean).imagerUrls)
+                    .into(view as ImageView)
+            }
+            setOnItemClickListener { banner, model, view, position ->
+                ToastUtil.showMessage("点击了第" + position + "图片")
+            }
+        }
+
+    }
+
+    fun buildNotice(noticeBean: NoticeBean.ContentBean.ListBean) {
+        mTvNotice.apply {
+            text = noticeBean.content
+            isSelected = true
+        }
     }
 }
