@@ -25,3 +25,13 @@
 -keep class android.support.**{*;}
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+#激光推送  混淆
+-dontoptimize
+-dontpreverify
+
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }
+-keep class * extends cn.jpush.android.helpers.JPushMessageReceiver { *; }
+
+-dontwarn cn.jiguang.**
+-keep class cn.jiguang.** { *; }

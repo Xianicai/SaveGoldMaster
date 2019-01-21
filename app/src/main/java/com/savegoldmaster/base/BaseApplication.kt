@@ -1,11 +1,12 @@
 package com.savegoldmaster.base
 
 import android.app.Application
+import android.content.Context
 import android.webkit.DownloadListener
+import cn.jpush.android.api.JPushInterface
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
-import com.example.zhanglibin.savegoldmaster.R
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.beta.Beta
 import io.objectbox.BoxStore
@@ -13,7 +14,6 @@ import com.savegoldmaster.home.view.MainActivity
 import com.savegoldmaster.utils.SharedPreferencesHelper
 import com.tencent.bugly.beta.download.DownloadTask
 import com.tencent.bugly.crashreport.CrashReport
-import com.example.zhanglibin.savegoldmaster.R.id.tv
 import com.savegoldmaster.utils.BuglyUtils
 
 
@@ -34,6 +34,7 @@ class BaseApplication : Application() {
         initLog()
         initObjectBox()
         initBugly()
+        initJPush()
     }
 
     private fun initBugly() {
@@ -53,5 +54,9 @@ class BaseApplication : Application() {
 //                val started = AndroidObjectBrowser(boxStore).start(this)
 //            }
 //        }
+    }
+    private fun initJPush(){
+        JPushInterface.setDebugMode(true)
+        JPushInterface.init(this)
     }
 }

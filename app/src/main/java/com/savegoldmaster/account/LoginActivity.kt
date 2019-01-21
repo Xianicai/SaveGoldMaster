@@ -12,21 +12,20 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.TextView
 import com.savegoldmaster.base.view.BaseMVPActivity
-import com.savegoldmaster.home.presenter.UserPresenterImpl
 import com.savegoldmaster.utils.ToastUtil
-import kotlinx.android.synthetic.main.activity_login.*
 import java.util.regex.Pattern
 import android.text.InputFilter
-import com.example.zhanglibin.savegoldmaster.R
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
+import com.savegoldmaster.R
 import com.savegoldmaster.account.model.bean.LoginBean
 import com.savegoldmaster.home.presenter.Contract.LoginContract
-import com.savegoldmaster.home.presenter.Contract.UserContract
 import com.savegoldmaster.home.presenter.LoginPresenterImpl
 import com.savegoldmaster.utils.SharedPreferencesHelper
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
 import com.savegoldmaster.utils.rxbus.RxEvent
-import com.tencent.bugly.crashreport.CrashReport
+import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.LoginView, View.OnClickListener {
@@ -55,6 +54,14 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         mImageClearPhoneNum.setOnClickListener(this)
         mTvGetCode.setOnClickListener(this)
         mTvLogin.setOnClickListener(this)
+        mImageHiddenPassword.setOnClickListener(this)
+        if (mEdPassword.transformationMethod is HideReturnsTransformationMethod) {
+            mImageHiddenPassword.setImageResource(R.mipmap.ic_hidden_password)
+            mEdPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+        } else {
+            mImageHiddenPassword.setImageResource(R.mipmap.ic_open_eyes)
+            mEdPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+        }
         mEdPhoneNum.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 mImageClearPhoneNum.visibility =
@@ -135,6 +142,19 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
                     return
                 }
             }
+            mImageHiddenPassword -> {
+                if (loginType == ACCOUNT_LOGIN) {
+                    if (mEdPassword.transformationMethod is HideReturnsTransformationMethod) {
+                        mImageHiddenPassword.setImageResource(R.mipmap.ic_hidden_password)
+                        mEdPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+                    } else {
+                        mImageHiddenPassword.setImageResource(R.mipmap.ic_open_eyes)
+                        mEdPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                    }
+                }
+
+
+            }
         }
     }
 
@@ -179,6 +199,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         mViewFasterLogin.visibility = View.GONE
         textView.setTextColor(ContextCompat.getColor(this@LoginActivity, R.color.color_C09C60))
         v.visibility = View.VISIBLE
+        mEdPassword.setText("")
         //设置不同状态下文字的显示隐藏
         if (loginType == ACCOUNT_LOGIN) {
             mImageHiddenPassword.visibility = View.VISIBLE
@@ -187,7 +208,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
             mTvForgetPassword.visibility = View.VISIBLE
             mEdPassword.apply {
                 hint = "请输入密码"
-                inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+//                inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
                 filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
             }
         } else {
@@ -197,7 +218,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
                 mTvTips.visibility = View.VISIBLE
                 mTvForgetPassword.visibility = View.GONE
                 hint = "请输入验证码"
-                inputType = InputType.TYPE_CLASS_NUMBER
+//                inputType = InputType.TYPE_CLASS_NUMBER
                 filters = arrayOf<InputFilter>(InputFilter.LengthFilter(6))
             }
         }

@@ -16,9 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import com.example.zhanglibin.savegoldmaster.R
-import com.example.zhanglibin.savegoldmaster.R.id.mTvOrder
-import com.example.zhanglibin.savegoldmaster.R.id.mTvOrderMsg
+import com.savegoldmaster.R
 import com.savegoldmaster.home.model.bean.*
 import kotlinx.android.synthetic.main.fragment_mine.*
 import kotlinx.android.synthetic.main.layout_home_gold_price.view.*
@@ -91,7 +89,7 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
         when (holder.adapterPosition) {
             HomeAdapter.TYPE_HOME_GOLD_PRICE -> {
                 datas.forEach {
-                    if (it is GoldPriceBean.ContentBean) {
+                    if (it is GoldPriceBean) {
                         (holder as GoldPriceViewHolder).buildGoldPrice(it)
                     }
                 }
@@ -130,15 +128,12 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
     }
 
     inner class GoldPriceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun buildGoldPrice(contentBean: GoldPriceBean.ContentBean) {
+        fun buildGoldPrice(contentBean: GoldPriceBean?) {
             itemView.mTvGoldTrend.setOnClickListener {
 
             }
-            itemView.mTvBuyGold.setOnClickListener {
-
-            }
             itemView.mTvRecycleGold.paint.isFakeBoldText = true
-            val priceText = "${contentBean.goldPrice}元/克"
+            val priceText = "${contentBean?.content?.goldPrice}元/克"
             itemView.mTvGoldPrice.text = SpannableString(priceText).apply {
                 setSpan(RelativeSizeSpan(3.33f), 0, priceText.length - 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 setSpan(StyleSpan(Typeface.BOLD), 0, priceText.length - 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -148,6 +143,10 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
 
     inner class OrderMsgViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun buildOrderMsg(userOderBean: UserOderBean) {
+            //我要卖金的点击事件
+            itemView.mTvBuyGold.setOnClickListener {
+
+            }
             val flipperViews = ArrayList<View>()
             for (i in 0 until userOderBean.content.size) {
                 val contentBean = userOderBean.content[i]
@@ -185,8 +184,22 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
             val d: Int = (recyclerGoldBean.content.weight / 1000 * 1000).toInt()
             val kg: Int = ((recyclerGoldBean.content.weight - d * 1000 * 1000) / 1000).toInt()
             val g: Int = (recyclerGoldBean.content.weight - d * 1000 * 1000 - kg * 1000).toInt()
-            var text = "${d}吨${kg}千克${g}克"
-            itemView.mTvTotalRecycle.text = text
+            if (d > 0) {
+                itemView.mTvTotalTon.text = d.toString()
+            } else {
+                itemView.mTvTotalTon.visibility = View.GONE
+            }
+            if (kg > 0) {
+                itemView.mTvTotalKg.text = kg.toString()
+            } else {
+                itemView.mTvTotalKg.visibility = View.GONE
+            }
+            if (g > 0) {
+                itemView.mTvTotalK.text = g.toString()
+            } else {
+                itemView.mTvTotalK.visibility = View.GONE
+            }
+
         }
     }
 

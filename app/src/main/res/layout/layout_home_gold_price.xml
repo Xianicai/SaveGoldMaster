@@ -56,17 +56,5 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:textSize="12sp"/>
-    <com.savegoldmaster.utils.view.BorderView
-            android:id="@+id/mTvBuyGold"
-            app:borderViewText="我要卖金"
-            app:borderViewTextSize="17sp"
-            app:borderViewTextColor="@color/white"
-            app:borderViewBackgroundColor="@color/color_F2B643"
-            android:layout_width="245dp"
-            app:borderViewRounded="true"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mTvGoldPrice"
-            android:layout_marginTop="15dp"
-            android:layout_height="40dp"/>
+
 </android.support.constraint.ConstraintLayout>

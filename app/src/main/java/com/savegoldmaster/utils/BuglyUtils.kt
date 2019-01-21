@@ -7,8 +7,7 @@ import android.webkit.DownloadListener
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.example.zhanglibin.savegoldmaster.R
-import com.example.zhanglibin.savegoldmaster.R.id.tv
+import com.savegoldmaster.R
 import com.savegoldmaster.base.BaseApplication
 import com.savegoldmaster.home.view.MainActivity
 import com.tencent.bugly.Bugly
@@ -27,6 +26,10 @@ class BuglyUtils {
             Beta.upgradeDialogLayoutId = R.layout.upgrade_dialog
             Beta.strUpgradeDialogInstallBtn = "立即更新"
             Beta.strUpgradeDialogCancelBtn = ""
+            //延迟检测时间
+            Beta.initDelay = 1 * 1000
+            //升级检查周期设置
+            Beta.upgradeCheckPeriod = 10 * 1000
 
             val telephone =
                 SharedPreferencesHelper(context, "UserBean").getSharedPreference("telephone", "").toString().trim()
@@ -67,7 +70,6 @@ class BuglyUtils {
                         }
 
                         override fun onReceive(p0: DownloadTask?) {
-                            ToastUtil.showMessage("下载onReceive")
 
                         }
 

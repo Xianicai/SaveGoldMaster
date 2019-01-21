@@ -11,7 +11,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.example.zhanglibin.savegoldmaster.R
+import com.savegoldmaster.R
 
 
 /**

@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.zhanglibin.savegoldmaster.R;
+import com.savegoldmaster.R;
 
 /**
  * Created by Zhanglibin on 2017/3/30.

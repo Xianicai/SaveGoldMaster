@@ -1,18 +1,21 @@
-package com.savegoldmaster.utils.view;
+package com.savegoldmaster.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
-import com.example.zhanglibin.savegoldmaster.R;
+import com.savegoldmaster.R;
 
 public class OutWebActivity extends AppCompatActivity {
     WebView mWebview;
@@ -27,10 +30,20 @@ public class OutWebActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        //取消标题栏
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //取消状态栏
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
+
+        setContentView(R.layout.activity_out_web);
         String url = getIntent().getStringExtra("url");
 
-        mWebview = (WebView) findViewById(R.id.webView1);
+        mWebview = (WebView) findViewById(R.id.webView);
         beginLoading = (TextView) findViewById(R.id.text_beginLoading);
         endLoading = (TextView) findViewById(R.id.text_endLoading);
         loading = (TextView) findViewById(R.id.text_Loading);

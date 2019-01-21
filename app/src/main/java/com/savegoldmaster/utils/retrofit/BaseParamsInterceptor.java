@@ -34,15 +34,14 @@ public class BaseParamsInterceptor implements Interceptor {
      */
     private Request addParam(Request oldRequest) {
         String authorization = "";
-        String defAuthorization = "ff80808163ce07740163ce08d6af0001_61210524b228443fbacc147cef000b57";
         if (BaseApplication.Companion.getInstance() != null) {
             SharedPreferencesHelper preferencesHelper = new SharedPreferencesHelper(BaseApplication.Companion.getInstance(), "UserBean");
-            authorization = preferencesHelper.getSharedPreference("authorization", defAuthorization).toString().trim();
+            authorization = preferencesHelper.getSharedPreference("authorization", authorization).toString().trim();
         }
         HttpUrl.Builder builder = oldRequest.url()
                 .newBuilder()
                 .setEncodedQueryParameter("client_sys", "android")
-                .setEncodedQueryParameter("version", "2.421");
+                .setEncodedQueryParameter("version", "1.0.0");
 
         Request newRequest = oldRequest.newBuilder()
                 .method(oldRequest.method(), oldRequest.body())

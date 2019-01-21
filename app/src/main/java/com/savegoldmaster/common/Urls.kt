@@ -28,10 +28,7 @@ class Urls {
          * 获取首页banner
          */
         const val GET_BANNER_LIST = "$BASE_URL/v3/adPic/getLimit"
-        /**
-         * 获取首页消息红点
-         */
-        const val GET_MESSAGE_TIPS = "$BASE_URL/v3/member/queryMessage"
+
         /**
          * 获取首页回收黄金总量
          */
@@ -53,9 +50,9 @@ class Urls {
         const val GET_NEARBY_SHOP = "$BASE_URL/v3/recycleOrder/personal/store_list"
 
         /**
-         * 获取通知
+         * 获取首页消息红点数量和公告标题
          */
-        const val GET_NOTICE = "$BASE_URL/v3/member/queryPageMsg"
+        const val GET_NOTICE = "$BASE_URL/v3/member/queryMessage"
 
         /**
          * 首页黄金回收信息

@@ -29,14 +29,6 @@ interface HomeService {
     ): Observable<BannerBean>
 
     /**
-     * 获取首页消息红点
-     *
-     * @return
-     */
-    @GET(Urls.GET_MESSAGE_TIPS)
-    fun getMessageTips(): Observable<BaseBean>
-
-    /**
      * 回收黄金总量
      *
      * @return
@@ -80,11 +72,7 @@ interface HomeService {
      * @return
      */
     @GET(Urls.GET_NOTICE)
-    fun getNotice(
-        @Query("pageNum") pageNum: Int,
-        @Query("pageSize") pageSize: Int,
-        @Query("type") type: Int
-    ): Observable<NoticeBean>
+    fun getNotice(): Observable<NoticeBean>
 
     /**
      * 获取首页滚动黄金订单

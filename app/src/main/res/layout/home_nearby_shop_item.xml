@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical">
     <com.savegoldmaster.utils.glide.GlideImageView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             android:id="@+id/mTvShopCover"
             android:layout_width="105dp"
             android:layout_height="105dp"/>
     <TextView
-            android:id="@+id/mTvShopName"
+            android:id="@+id/mTvLabel"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_nearby_shop_label"
+            app:layout_constraintTop_toTopOf="@+id/mTvShopCover"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/white"
+            android:textSize="8sp"
+            android:gravity="center"
+            app:layout_constraintLeft_toLeftOf="@+id/mTvShopCover"/>
+    <TextView
+            android:id="@+id/mTvShopName"
+            app:layout_constraintTop_toBottomOf="@+id/mTvShopCover"
+            android:layout_width="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/mTvShopCover"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:maxEms="7"
@@ -19,5 +35,7 @@
     <ImageView android:layout_width="wrap_content"
                android:layout_height="12dp"
                android:layout_marginTop="5dp"
+               app:layout_constraintLeft_toLeftOf="@+id/mTvShopName"
+               app:layout_constraintTop_toBottomOf="@+id/mTvShopName"
                android:src="@mipmap/ic_star"/>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

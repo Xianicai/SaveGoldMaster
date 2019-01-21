@@ -18,8 +18,7 @@ import android.view.WindowManager
 import com.ashokvarma.bottomnavigation.BottomNavigationItem
 import com.ashokvarma.bottomnavigation.BottomNavigationBar
 import com.ashokvarma.bottomnavigation.BottomNavigationBar.*
-import com.example.zhanglibin.savegoldmaster.R
-import com.example.zhanglibin.savegoldmaster.R.id.mBottomNavigationBar
+import com.savegoldmaster.R
 import com.savegoldmaster.home.model.bean.UserBean
 import com.savegoldmaster.utils.permissionUtil.PermissionInterface
 import kotlinx.android.synthetic.main.activity_main.*

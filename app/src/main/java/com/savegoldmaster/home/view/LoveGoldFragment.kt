@@ -1,7 +1,7 @@
 package com.savegoldmaster.home.view
 
 import android.view.View
-import com.example.zhanglibin.savegoldmaster.R
+import com.savegoldmaster.R
 import com.savegoldmaster.base.view.BaseMVPFragment
 import com.savegoldmaster.home.presenter.UserPresenterImpl
 

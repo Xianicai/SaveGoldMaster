@@ -15,9 +15,6 @@ class HomeModelImpl : HomeModel {
         return homeService.getBanner(position, number, isIOS)
     }
 
-    override fun getMessageTips(): Observable<BaseBean> {
-        return homeService.getMessageTips()
-    }
 
     override fun getRecycleGold(): Observable<RecyclerGoldBean> {
         return homeService.getRecycleGold()
@@ -35,8 +32,8 @@ class HomeModelImpl : HomeModel {
         return homeService.getNearbyShop(lat, lng)
     }
 
-    override fun getNotice(pageNum: Int, pageSize: Int, type: Int): Observable<NoticeBean> {
-        return homeService.getNotice(pageNum, pageSize, type)
+    override fun getNotice(): Observable<NoticeBean> {
+        return homeService.getNotice()
 
     }
 

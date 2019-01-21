@@ -4,7 +4,7 @@ import android.content.Context
 import com.example.zhanglibin.bdmoe.adapter.CommonRecyclerAdapter
 import com.example.zhanglibin.bdmoe.adapter.MultiTypeSupport
 import com.example.zhanglibin.bdmoe.adapter.ViewHolder
-import com.example.zhanglibin.savegoldmaster.R
+import com.savegoldmaster.R
 import kotlinx.android.synthetic.main.mine_list_item.view.*
 
 class MineListAdapter(context: Context, datas: ArrayList<MineListBean>) :

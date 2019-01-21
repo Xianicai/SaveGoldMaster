@@ -28,16 +28,6 @@ class HomePresenterImpl : BasePresenterImpl<HomeContract.HomeView>(), HomeContra
             })
     }
 
-    override fun getMessageTips() {
-        homeModelImpl.getMessageTips()
-            .compose(ThreadTransformer<BaseBean>())
-            .subscribe(object : RespondObserver<BaseBean>() {
-                override fun onSuccess(result: BaseBean?) {
-                    super.onSuccess(result)
-                    mView?.getMessageTips()
-                }
-            })
-    }
 
     override fun getRecycleGold() {
         homeModelImpl.getRecycleGold()
@@ -83,8 +73,8 @@ class HomePresenterImpl : BasePresenterImpl<HomeContract.HomeView>(), HomeContra
             })
     }
 
-    override fun getNotice(pageNum: Int, pageSize: Int, type: Int) {
-        homeModelImpl.getNotice(pageNum, pageSize, type)
+    override fun getNotice() {
+        homeModelImpl.getNotice()
             .compose(ThreadTransformer<NoticeBean>())
             .subscribe(object : RespondObserver<NoticeBean>() {
                 override fun onSuccess(result: NoticeBean?) {

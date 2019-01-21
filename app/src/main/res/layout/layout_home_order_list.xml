@@ -4,25 +4,42 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@color/white"
-              android:padding="20dp">
+              android:paddingHorizontal="20dp"
+              android:paddingBottom="20dp"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+    <com.savegoldmaster.utils.view.BorderView
+            android:id="@+id/mTvBuyGold"
+            app:borderViewText="我要卖金"
+            app:borderViewTextSize="17sp"
+            app:borderViewTextColor="@color/white"
+            app:borderViewBackgroundColor="@color/color_F2B643"
+            android:layout_width="245dp"
+            app:borderViewRounded="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mTvGoldPrice"
+            android:layout_marginTop="15dp"
+            android:layout_height="40dp"/>
     <com.savegoldmaster.utils.view.BorderView
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:layout_marginTop="20dp"
             app:borderViewRounded="true"
             app:borderViewBackgroundColor="@color/color_F5F5F5">
         <ImageView
                 android:id="@+id/mImageIcGold"
                 android:layout_width="wrap_content"
                 android:layout_centerVertical="true"
-                   android:layout_height="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-        android:src="@mipmap/ic_home_gold"/>
+                android:src="@mipmap/ic_home_gold"/>
         <ViewFlipper
                 android:id="@+id/pushUpFlipper"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/mImageIcGold"/>
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/mImageIcGold"/>
     </com.savegoldmaster.utils.view.BorderView>
 </LinearLayout>

@@ -243,7 +243,16 @@
                 android:src="@mipmap/ic_msg_black"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="21dp"/>
+        <ImageView
+                android:id="@+id/mImageUnread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_unread_msg"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="17dp"/>
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

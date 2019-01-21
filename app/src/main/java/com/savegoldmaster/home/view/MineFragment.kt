@@ -13,7 +13,7 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.AdapterView
-import com.example.zhanglibin.savegoldmaster.R
+import com.savegoldmaster.R
 import com.savegoldmaster.account.LoginActivity
 import com.savegoldmaster.base.BaseApplication
 import com.savegoldmaster.base.view.BaseMVPFragment

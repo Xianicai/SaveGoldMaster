@@ -11,13 +11,42 @@
               android:textSize="13sp"
               android:includeFontPadding="false"
               android:layout_height="wrap_content"/>
-    <TextView
-            android:id="@+id/mTvTotalRecycle"
-            android:layout_width="wrap_content"
-            android:text="999吨999千克"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-            android:includeFontPadding="false"
-            android:layout_marginTop="23dp"
-            android:layout_height="wrap_content"/>
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content">
+        <TextView
+                android:id="@+id/mTvTotalTon"
+                android:layout_width="wrap_content"
+                android:text="999"
+                android:drawableRight="@mipmap/ic_recycle_ton"
+                android:drawablePadding="9dp"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:includeFontPadding="false"
+                android:layout_marginTop="23dp"
+                android:paddingRight="9dp"
+                android:layout_height="wrap_content"/>
+        <TextView
+                android:id="@+id/mTvTotalKg"
+                android:layout_width="wrap_content"
+                android:text="999"
+                android:drawableRight="@mipmap/ic_recycle_kg"
+                android:drawablePadding="9dp"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:paddingRight="9dp"
+                android:includeFontPadding="false"
+                android:layout_marginTop="23dp"
+                android:layout_height="wrap_content"/>
+        <TextView
+                android:id="@+id/mTvTotalK"
+                android:layout_width="wrap_content"
+                android:text="999"
+                android:drawableRight="@mipmap/ic_recycle_g"
+                android:drawablePadding="9dp"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:includeFontPadding="false"
+                android:layout_marginTop="23dp"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
 </LinearLayout>

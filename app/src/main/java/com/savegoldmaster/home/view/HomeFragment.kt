@@ -1,18 +1,20 @@
 package com.savegoldmaster.home.view
 
+import android.content.Context
+import android.os.Build
+import android.os.CountDownTimer
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.example.zhanglibin.savegoldmaster.R
+import com.savegoldmaster.R
 import com.savegoldmaster.base.view.BaseMVPFragment
 import com.savegoldmaster.home.model.bean.*
 import com.savegoldmaster.home.presenter.Contract.HomeContract
 import com.savegoldmaster.home.presenter.HomePresenterImpl
 import com.savegoldmaster.home.view.adapter.HomeAdapter
-import com.savegoldmaster.utils.ListUtil
-import com.savegoldmaster.utils.ToastUtil
+import com.savegoldmaster.utils.*
 import com.savegoldmaster.utils.glide.GlideImageView
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlin.collections.ArrayList
@@ -26,9 +28,11 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         }
     }
 
-    private var listBean: ArrayList<Object>? = null
+    private var listBean: ArrayList<Object> = ArrayList()
     private var homePresenterImpl: HomePresenterImpl? = null
     private var homeAdapter: HomeAdapter? = null
+    private var start: CountDownTimer? = null
+
     override fun getLayoutId(): Int {
         return R.layout.fragment_home
     }
@@ -46,20 +50,31 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
                 R.layout.layout_home_company_info, mRecyclerView.parent as ViewGroup, false
             )
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mScrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                if (px2dp(context!!, scrollY) > 48) {
+                    mLayoutTopTab.visibility = View.VISIBLE
+                } else {
+                    mLayoutTopTab.visibility = View.GONE
+                }
+            }
+        }
         initData()
     }
 
     private fun initData() {
+        listBean.add(GoldPriceBean() as Object)
         homePresenterImpl?.getBanner(1, 5, 2)
-        homePresenterImpl?.getNotice(1, 10, 1)
+        homePresenterImpl?.getNotice()
         homePresenterImpl?.getGoldPrice()
         homePresenterImpl?.getGoldNewOder()
         homePresenterImpl?.getRecycleGold()
-//        val location = LocationUtils.getInstance(context).showLocation()
-//        if (location != null) {
-//            ToastUtil.showMessage("纬度：" + location.latitude + "经度：" + location.longitude)
-//        }
-        homePresenterImpl?.getNearbyShop("","")
+        val location = LocationUtils.getInstance(context).showLocation()
+        if (location != null) {
+            homePresenterImpl?.getNearbyShop(location.latitude.toString(), location.longitude.toString())
+        } else {
+            homePresenterImpl?.getNearbyShop("", "")
+        }
         homePresenterImpl?.getNewInformation()
 //        homePresenterImpl?.getMessageTips()
     }
@@ -72,7 +87,6 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     override fun onClick(v: View?) {
         when (v) {
             mImageMsg -> {
-
             }
             mImageClose -> {
                 mLayoutNotice.visibility = View.GONE
@@ -88,39 +102,42 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     override fun getNotice(noticeBean: NoticeBean) {
         if (noticeBean.content != null && ListUtil.isNotEmpty(noticeBean.content.list)) {
             buildNotice(noticeBean.content.list[0])
-        }else{
+        } else {
             mLayoutNotice.visibility = View.GONE
         }
     }
 
     override fun getGoldPrice(goldPriceBean: GoldPriceBean) {
-        listBean?.add(goldPriceBean.content as Object)
-        homeAdapter?.notifyDataSetChanged()
+        for(i in 0 until listBean.size){
+            if (listBean[i] is GoldPriceBean){
+                listBean[i] = goldPriceBean as Object
+            }
+        }
+        homeAdapter?.notifyItemChanged(HomeAdapter.TYPE_HOME_GOLD_PRICE)
+        countDownTime()
     }
 
     override fun getGoldNewOder(userOderBean: UserOderBean) {
-        listBean?.add(userOderBean as Object)
+        listBean.add(buildOrderTime(userOderBean) as Object)
         homeAdapter?.notifyDataSetChanged()
 
     }
 
     override fun getRecycleGold(recyclerGoldBean: RecyclerGoldBean) {
-        listBean?.add(recyclerGoldBean as Object)
+        listBean.add(recyclerGoldBean as Object)
         homeAdapter?.notifyDataSetChanged()
 
     }
 
-    override fun getMessageTips() {
-    }
 
     override fun getNearbyShop(nearbyShopBean: NearbyShopBean) {
-        listBean?.add(nearbyShopBean as Object)
+        listBean.add(nearbyShopBean as Object)
         homeAdapter?.notifyDataSetChanged()
 
     }
 
     override fun getNewInformation(informationBean: InformationBean) {
-        listBean?.add(informationBean as Object)
+        listBean.add(informationBean as Object)
         homeAdapter?.notifyDataSetChanged()
     }
 
@@ -143,10 +160,22 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
                     .into(view as ImageView)
             }
             setOnItemClickListener { banner, model, view, position ->
-                ToastUtil.showMessage("点击了第" + position + "图片")
+                if (StringUtil.isNotEmpty(bannerBean.content[position].hrefUrl)) {
+                    OutWebActivity.start(context, bannerBean.content[position].hrefUrl)
+                }
             }
         }
 
+    }
+
+    private fun countDownTime() {
+        start = object : CountDownTimer(3000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+            }
+            override fun onFinish() {
+                homePresenterImpl?.getGoldPrice()
+            }
+        }.start()
     }
 
     fun buildNotice(noticeBean: NoticeBean.ContentBean.ListBean) {
@@ -154,5 +183,24 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
             text = noticeBean.content
             isSelected = true
         }
+    }
+
+    fun buildOrderTime(userOderBean: UserOderBean): UserOderBean {
+        for (i in 0 until userOderBean.content.size) {
+            userOderBean.content[i].createTime =
+                    DateTimeUtil.getTime(DateTimeUtil.dateToStamp(userOderBean.content[i].createTime))
+        }
+        return userOderBean
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        start = null
+    }
+
+    //将px转换为dp
+    fun px2dp(context: Context, pxValue: Int): Int {
+        val scale = context.resources.displayMetrics.density
+        return (pxValue / scale + 0.5f).toInt()
     }
 }
