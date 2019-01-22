@@ -6,6 +6,7 @@
     <com.savegoldmaster.utils.glide.GlideImageView
             android:id="@+id/mImageCover"
             android:layout_width="90dp"
+            app:placeholderImage="@mipmap/ic_info_def"
             android:layout_height="60dp"/>
     <TextView
             android:id="@+id/mTvTitle"

@@ -68,7 +68,6 @@ interface HomeService {
 
     /**
      * 获取首页公告
-     * @param   type  0黄金资讯，1系统公告，2营销活动，3用户消息
      * @return
      */
     @GET(Urls.GET_NOTICE)

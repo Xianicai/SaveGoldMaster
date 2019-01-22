@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.AdapterView
 import com.savegoldmaster.R
 import com.savegoldmaster.account.LoginActivity
+import com.savegoldmaster.account.UserUtil
 import com.savegoldmaster.base.BaseApplication
 import com.savegoldmaster.base.view.BaseMVPFragment
 import com.savegoldmaster.home.model.bean.UserBean
@@ -120,7 +121,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
     private fun addEvent() {
         RxBus.getDefault().toObservable(RxEvent::class.java)
             .subscribe { t ->
-                if (t?.eventType == EventConstant.GET_USER_DETAIL) {
+                if (t?.eventType == EventConstant.USER_LOGIN) {
                     SharedPreferencesHelper(context, "UserBean").run {
                         token = getSharedPreference("token", "").toString().trim()
                         userId = getSharedPreference("userId", "").toString().trim()
@@ -143,7 +144,6 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
                 LoginActivity.start(activity!!)
             }
             mTvServiceTel -> {
-
                 startActivity(
                     Intent(
                         Intent.ACTION_DIAL,
@@ -159,6 +159,11 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
             }
             mImageMsg -> {
                 //消息
+                if (UserUtil.isLogin()) {
+
+                } else {
+                    LoginActivity.start(context!!)
+                }
             }
         }
     }

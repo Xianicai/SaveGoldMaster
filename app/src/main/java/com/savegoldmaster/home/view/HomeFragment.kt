@@ -1,5 +1,6 @@
 package com.savegoldmaster.home.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.CountDownTimer
@@ -9,14 +10,21 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.savegoldmaster.R
+import com.savegoldmaster.account.LoginActivity
+import com.savegoldmaster.account.UserUtil
 import com.savegoldmaster.base.view.BaseMVPFragment
+import com.savegoldmaster.common.Urls
 import com.savegoldmaster.home.model.bean.*
 import com.savegoldmaster.home.presenter.Contract.HomeContract
 import com.savegoldmaster.home.presenter.HomePresenterImpl
 import com.savegoldmaster.home.view.adapter.HomeAdapter
 import com.savegoldmaster.utils.*
 import com.savegoldmaster.utils.glide.GlideImageView
+import com.savegoldmaster.utils.rxbus.EventConstant
+import com.savegoldmaster.utils.rxbus.RxBus
+import com.savegoldmaster.utils.rxbus.RxEvent
 import kotlinx.android.synthetic.main.fragment_home.*
+import retrofit2.http.Url
 import kotlin.collections.ArrayList
 
 class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView, View.OnClickListener {
@@ -40,6 +48,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     override fun initView(view: View?) {
         mImageMsg.setOnClickListener(this)
         mImageClose.setOnClickListener(this)
+        mImageMsgV2.setOnClickListener(this)
         listBean = ArrayList()
         mRecyclerView.isNestedScrollingEnabled = false
         mRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -65,7 +74,9 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     private fun initData() {
         listBean.add(GoldPriceBean() as Object)
         homePresenterImpl?.getBanner(1, 5, 2)
-        homePresenterImpl?.getNotice()
+        if (UserUtil.isLogin()) {
+            homePresenterImpl?.getNotice()
+        }
         homePresenterImpl?.getGoldPrice()
         homePresenterImpl?.getGoldNewOder()
         homePresenterImpl?.getRecycleGold()
@@ -76,7 +87,6 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
             homePresenterImpl?.getNearbyShop("", "")
         }
         homePresenterImpl?.getNewInformation()
-//        homePresenterImpl?.getMessageTips()
     }
 
     override fun createPresenter(): HomePresenterImpl {
@@ -86,10 +96,15 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
 
     override fun onClick(v: View?) {
         when (v) {
-            mImageMsg -> {
-            }
             mImageClose -> {
                 mLayoutNotice.visibility = View.GONE
+            }
+            mImageMsgV2, mImageMsg -> {
+                if (UserUtil.isLogin()) {
+                    OutWebActivity.start(context!!, "${Urls.BASE_URL}messagelist")
+                } else {
+                    LoginActivity.start(context!!)
+                }
             }
         }
 
@@ -100,16 +115,26 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     }
 
     override fun getNotice(noticeBean: NoticeBean) {
-        if (noticeBean.content != null && ListUtil.isNotEmpty(noticeBean.content.list)) {
-            buildNotice(noticeBean.content.list[0])
+        if (StringUtil.isNotEmpty(noticeBean.content.title)) {
+            mLayoutNotice.visibility = View.VISIBLE
+            buildNotice(noticeBean.content)
+            Glide.with(context).load(R.mipmap.ic_home_notice).into(mImageNotice)
         } else {
             mLayoutNotice.visibility = View.GONE
+        }
+
+        if (noticeBean.content.count > 0) {
+            mImageUnreadV2.visibility = View.VISIBLE
+            mImageUnread.visibility = View.VISIBLE
+        } else {
+            mImageUnreadV2.visibility = View.VISIBLE
+            mImageUnread.visibility = View.VISIBLE
         }
     }
 
     override fun getGoldPrice(goldPriceBean: GoldPriceBean) {
-        for(i in 0 until listBean.size){
-            if (listBean[i] is GoldPriceBean){
+        for (i in 0 until listBean.size) {
+            if (listBean[i] is GoldPriceBean) {
                 listBean[i] = goldPriceBean as Object
             }
         }
@@ -157,6 +182,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
             setBannerData(imageUrls)
             loadImage { banner, model, view, position ->
                 Glide.with(context).load((model as XBannerBean).imagerUrls)
+                    .placeholder(R.mipmap.ic_banner_def)
                     .into(view as ImageView)
             }
             setOnItemClickListener { banner, model, view, position ->
@@ -172,15 +198,16 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         start = object : CountDownTimer(3000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
             }
+
             override fun onFinish() {
                 homePresenterImpl?.getGoldPrice()
             }
         }.start()
     }
 
-    fun buildNotice(noticeBean: NoticeBean.ContentBean.ListBean) {
+    fun buildNotice(noticeBean: NoticeBean.ContentBean) {
         mTvNotice.apply {
-            text = noticeBean.content
+            text = noticeBean.title
             isSelected = true
         }
     }
@@ -202,5 +229,15 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     fun px2dp(context: Context, pxValue: Int): Int {
         val scale = context.resources.displayMetrics.density
         return (pxValue / scale + 0.5f).toInt()
+    }
+
+    @SuppressLint("CheckResult")
+    private fun addEvent() {
+        RxBus.getDefault().toObservable(RxEvent::class.java)
+            .subscribe { t ->
+                if (t?.eventType == EventConstant.USER_LOGIN) {
+                    initData()
+                }
+            }
     }
 }

@@ -34,16 +34,6 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
         val TYPE_HOME_INFORMATION: Int = 4
     }
 
-    private var showNoticeView: Boolean = true
-    fun setShowNoticeView(showNoticeView: Boolean) {
-        this.showNoticeView = showNoticeView
-        datas.forEach {
-            if (it is NoticeBean.ContentBean.ListBean) {
-                datas.remove(it)
-            }
-        }
-        notifyDataSetChanged()
-    }
 
     override fun getItemViewType(position: Int): Int {
         return when (position) {

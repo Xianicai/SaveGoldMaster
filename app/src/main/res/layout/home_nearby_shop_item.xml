@@ -9,6 +9,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:id="@+id/mTvShopCover"
             android:layout_width="105dp"
+            app:placeholderImage="@mipmap/ic_shop_def"
             android:layout_height="105dp"/>
     <TextView
             android:id="@+id/mTvLabel"

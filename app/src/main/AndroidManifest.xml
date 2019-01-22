@@ -64,7 +64,7 @@
                     android:resource="@xml/provider_paths"/>
         </provider>
 
-        <activity android:name="com.savegoldmaster.home.view.AppStartActivity"
+        <activity android:name="com.savegoldmaster.home.view.SplashActivity"
                   android:theme="@style/AppTheme.NoActionBarWithBackGround">
             <intent-filter>
                 <action

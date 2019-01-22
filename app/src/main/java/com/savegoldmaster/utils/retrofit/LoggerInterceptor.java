@@ -20,8 +20,8 @@ public class LoggerInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-        printRequestMessage(request);
         //开始请求
+        printRequestMessage(request);
         Response response = chain.proceed(request);
         //请求之后的信息打印
         printResponseMessage(response);
@@ -37,10 +37,9 @@ public class LoggerInterceptor implements Interceptor {
         if (request == null) {
             return;
         }
-//        XLog.d( "Method: " + request.method() + "\nUrl   : " + request.url().url().toString());
         RequestBody requestBody = request.body();
         if (requestBody == null) {
-            XLog.d("Method: " + request.method() + "\nUrl   : " + request.url().url().toString());
+            XLog.d("请求开始\nMethod: " + request.method() + "\nUrl   : " + request.url().url().toString());
             return;
         }
         try {
@@ -48,7 +47,7 @@ public class LoggerInterceptor implements Interceptor {
             requestBody.writeTo(bufferedSink);
             Charset charset = requestBody.contentType().charset();
             charset = charset == null ? Charset.forName("utf-8") : charset;
-            XLog.d("Method: " + request.method() + "\nUrl   : " + request.url().url().toString() + "\nParams: " + bufferedSink.readString(charset));
+            XLog.d("请求开始\nMethod: " + request.method() + "\nUrl   : " + request.url().url().toString() + "\nParams: " + bufferedSink.readString(charset));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,6 +79,20 @@ public class LoggerInterceptor implements Interceptor {
         }
         if (contentLength != 0 && charset != null) {
             String result = buffer.clone().readString(charset);
+            if (response.request().body() == null) {
+                XLog.d("请求结束\nMethod: " + response.request().method() + "\nUrl   : " + response.request().url().toString() + "\n" + result);
+            } else {
+                try {
+                    Buffer bufferedSink = new Buffer();
+                    response.request().body().writeTo(bufferedSink);
+                    XLog.d("请求结束\nMethod: " + response.request().method() + "\nUrl   : " + response.request().url().toString() + "\nParams: " + bufferedSink.readString(charset) + "\n" + result);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
             XLog.d(result);
         }
     }

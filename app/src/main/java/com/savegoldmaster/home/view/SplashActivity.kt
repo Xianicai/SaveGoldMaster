@@ -1,6 +1,5 @@
 package com.savegoldmaster.home.view
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v4.view.PagerAdapter
@@ -12,19 +11,17 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import com.elvishew.xlog.XLog
 import com.savegoldmaster.R
-import com.savegoldmaster.base.BaseApplication
 import com.savegoldmaster.base.view.BaseMVPActivity
 import com.savegoldmaster.home.model.bean.BannerBean
 import com.savegoldmaster.home.presenter.AppStartPresenterImpl
 import com.savegoldmaster.home.presenter.Contract.AppStartContract
 import com.savegoldmaster.utils.SharedPreferencesHelper
 import com.savegoldmaster.utils.StringUtil
-import kotlinx.android.synthetic.main.activity_guide_app.*
 import kotlinx.android.synthetic.main.activity_start_app.*
 import kotlinx.android.synthetic.main.layout_app_guide.*
 import java.util.ArrayList
 
-class AppStartActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContract.AppStartView, View.OnClickListener {
+class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContract.AppStartView, View.OnClickListener {
 
 
     private var adImageUrl: String? = null
@@ -38,7 +35,7 @@ class AppStartActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContr
 
     private var presenter: AppStartPresenterImpl? = null
     override fun getLayoutId(): Int {
-        SharedPreferencesHelper(this, "UserBean").apply {
+        SharedPreferencesHelper(this, "AdBean").apply {
             adImageUrl = getSharedPreference("adImageUrl", "") as String?
             url = getSharedPreference("url", "") as String?
             firstOpened = getSharedPreference("firstOpened", false) as Boolean
@@ -58,7 +55,6 @@ class AppStartActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContr
 
     override fun initViews(savedInstanceState: Bundle?) {
         presenter?.getAppAd(6, 1, 2)
-        XLog.d("请求广告接口")
         if (firstOpened) {
             if (StringUtil.isNotEmpty(adImageUrl)) {
                 mImageAd.visibility = View.VISIBLE
@@ -68,14 +64,14 @@ class AppStartActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContr
             } else {
                 mImageAd.visibility = View.GONE
                 mViewNext.visibility = View.GONE
-                MainActivity.start(this@AppStartActivity)
+                MainActivity.start(this@SplashActivity)
                 finish()
             }
 
             mViewNext.setOnClickListener(this)
             mImageAd.setOnClickListener(this)
         } else {
-            SharedPreferencesHelper(this@AppStartActivity, "UserBean").apply {
+            SharedPreferencesHelper(this@SplashActivity, "AdBean").apply {
                 put("firstOpened", true)
             }
             initGuideData()
@@ -87,7 +83,7 @@ class AppStartActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContr
     override fun onClick(v: View?) {
         when (v) {
             mViewNext -> {
-                MainActivity.start(this@AppStartActivity)
+                MainActivity.start(this@SplashActivity)
                 finish()
             }
             mImageAd -> {
@@ -99,7 +95,7 @@ class AppStartActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContr
 
     override fun getAppAd(adBean: BannerBean) {
         if (adBean.content.isNotEmpty()) {
-            SharedPreferencesHelper(this@AppStartActivity, "AdBean").apply {
+            SharedPreferencesHelper(this@SplashActivity, "AdBean").apply {
                 put("adImageUrl", adBean.content[0].imgUrl)
                 put("url", adBean.content[0].hrefUrl)
             }
@@ -119,7 +115,7 @@ class AppStartActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContr
                 mViewNext.run {
                     setText("跳过 0s")
                 }
-                MainActivity.start(this@AppStartActivity)
+                MainActivity.start(this@SplashActivity)
                 finish()
             }
         }.start()
@@ -167,7 +163,7 @@ class AppStartActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContr
         viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 if (position == imgResArr.size - 1) {
-                    MainActivity.start(this@AppStartActivity)
+                    MainActivity.start(this@SplashActivity)
                     finish()
                 }
 

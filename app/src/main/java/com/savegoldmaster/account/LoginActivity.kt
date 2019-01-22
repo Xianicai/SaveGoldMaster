@@ -185,7 +185,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
             put("authorization", "${loginBean.content.userId}_${loginBean.content.token}")
         }
         ToastUtil.showMessage("登录成功")
-        RxBus.getDefault().post(RxEvent(EventConstant.GET_USER_DETAIL, loginBean.content.userId))
+        RxBus.getDefault().post(RxEvent(EventConstant.USER_LOGIN, loginBean.content.userId))
         finish()
     }
 

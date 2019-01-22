@@ -40,7 +40,6 @@ public class GlideImageView extends android.support.v7.widget.AppCompatImageView
     }
 
     public void setImage(String url) {
-        if (mDefaultImageResId != 0) {
             Glide.with(mCon)
                     .load(url)
                     .placeholder(mDefaultImageResId)
@@ -51,7 +50,6 @@ public class GlideImageView extends android.support.v7.widget.AppCompatImageView
                     .centerCrop()
                     .crossFade()
                     .into(this);
-        }
 
     }
 
