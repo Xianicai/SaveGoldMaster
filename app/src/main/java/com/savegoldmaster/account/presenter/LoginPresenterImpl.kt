@@ -6,7 +6,6 @@ import com.savegoldmaster.base.BaseBean
 import com.savegoldmaster.base.presenter.BasePresenterImpl
 import com.savegoldmaster.home.presenter.Contract.LoginContract
 import com.savegoldmaster.utils.ToastUtil
-import com.savegoldmaster.utils.retrofit.HttpResult
 import com.savegoldmaster.utils.retrofit.RespondObserver
 import com.savegoldmaster.utils.retrofit.ThreadTransformer
 

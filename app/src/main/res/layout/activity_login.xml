@@ -5,8 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:fitsSystemWindows="true">
+        android:background="@color/white">
     <ImageView
             android:id="@+id/mImageClose"
             android:layout_width="22dp"
@@ -80,7 +79,9 @@
             android:background="@null"
             android:gravity="center_vertical"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="150dp"
             android:inputType="number"
+            android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -114,6 +115,8 @@
             android:inputType="textPassword"
             android:gravity="center_vertical"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="150dp"
+            android:textSize="14sp"
             android:digits="0123456789qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -132,9 +135,10 @@
             android:id="@+id/mImageHiddenPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             app:layout_constraintTop_toTopOf="@+id/mEdPassword"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginRight="28dp"
+            android:layout_marginRight="18dp"
             app:layout_constraintBottom_toBottomOf="@+id/mEdPassword"
             android:src="@mipmap/ic_hidden_password"
             android:visibility="gone"/>

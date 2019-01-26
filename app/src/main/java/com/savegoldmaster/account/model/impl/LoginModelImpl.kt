@@ -4,7 +4,6 @@ import com.savegoldmaster.account.model.LoginModel
 import com.savegoldmaster.account.model.bean.LoginBean
 import com.savegoldmaster.base.BaseBean
 import com.savegoldmaster.home.model.service.LoginService
-import com.savegoldmaster.utils.retrofit.HttpResult
 import com.savegoldmaster.utils.retrofit.Requester
 import io.reactivex.Observable
 

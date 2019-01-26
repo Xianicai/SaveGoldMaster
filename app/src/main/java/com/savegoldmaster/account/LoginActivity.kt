@@ -22,6 +22,7 @@ import com.savegoldmaster.account.model.bean.LoginBean
 import com.savegoldmaster.home.presenter.Contract.LoginContract
 import com.savegoldmaster.home.presenter.LoginPresenterImpl
 import com.savegoldmaster.utils.SharedPreferencesHelper
+import com.savegoldmaster.utils.StringUtil
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
 import com.savegoldmaster.utils.rxbus.RxEvent
@@ -75,7 +76,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (mEdPhoneNum.text.toString().trim().length == 11 && mEdPassword.text.toString().trim().length == 6) {
+                if (mEdPhoneNum.text.toString().trim().length == 11 && mEdPassword.text.toString().trim().length > 5) {
                     mTvLogin.setBackgroundColor(ContextCompat.getColor(this@LoginActivity, R.color.color_DDC899))
                 } else {
                     mTvLogin.setBackgroundColor(Color.parseColor("#80DDC899"))
@@ -91,7 +92,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (mEdPhoneNum.text.toString().trim().length == 11 && mEdPassword.text.toString().trim().length == 6) {
+                if (mEdPhoneNum.text.toString().trim().length == 11 && mEdPassword.text.toString().trim().length > 5) {
                     mTvLogin.setBackgroundColor(ContextCompat.getColor(this@LoginActivity, R.color.color_DDC899))
                 } else {
                     mTvLogin.setBackgroundColor(Color.parseColor("#80DDC899"))
@@ -134,9 +135,17 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
             mTvLogin -> {
                 val phoneNum = mEdPhoneNum.text.toString().trim()
                 val password = mEdPassword.text.toString().trim()
-                if (loginType == FASTER_LOGIN && isCellphone(phoneNum) && password.length == 6) {
+                if (phoneNum.isEmpty()){
+                    ToastUtil.showMessage("请输入的手机号")
+                    return
+                }
+                if (!isCellphone(phoneNum)){
+                    ToastUtil.showMessage("您输入的手机号不正确")
+                    return
+                }
+                if (loginType == FASTER_LOGIN  && password.length == 6) {
                     loginPresenterImpl?.fasterLogin(phoneNum, password, "", "", "")
-                } else if (loginType == ACCOUNT_LOGIN && isCellphone(phoneNum) && password.length >= 6) {
+                } else if (loginType == ACCOUNT_LOGIN  && password.length >= 6) {
                     loginPresenterImpl?.accountLogin(phoneNum, password)
                 } else {
                     return
@@ -257,4 +266,5 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         start = null
         super.onDestroy()
     }
+
 }

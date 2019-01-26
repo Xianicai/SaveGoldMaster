@@ -58,6 +58,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
     }
 
     override fun initView(view: View?) {
+        addMsgEvent()
         SharedPreferencesHelper(context, "UserBean").run {
             token = getSharedPreference("token", "").toString().trim()
             userId = getSharedPreference("userId", "").toString().trim()
@@ -205,5 +206,19 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
             mTvBalance.text = userBean.content.cashBalanceStr
 
         }
+    }
+
+    @SuppressLint("CheckResult")
+    private fun addMsgEvent() {
+        RxBus.getDefault().toObservable(RxEvent::class.java)
+            .subscribe { t ->
+                if (t?.eventType == EventConstant.MINE_FRAGMENT_MSG) {
+                    if (t.`object` as Int>0){
+                        mImageUnread.visibility = View.VISIBLE
+                    }else{
+                        mImageUnread.visibility = View.GONE
+                    }
+                }
+            }
     }
 }

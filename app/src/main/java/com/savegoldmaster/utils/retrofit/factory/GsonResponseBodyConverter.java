@@ -2,7 +2,8 @@ package com.savegoldmaster.utils.retrofit.factory;
 
 
 import android.util.Log;
-import com.savegoldmaster.utils.retrofit.HttpResult;
+import com.savegoldmaster.base.BaseBean;
+import com.savegoldmaster.utils.ToastUtil;
 import com.savegoldmaster.utils.retrofit.UnicodeUtil;
 import com.google.gson.Gson;
 import okhttp3.ResponseBody;
@@ -30,8 +31,13 @@ public class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> 
     public T convert(ResponseBody value) throws IOException {
 
         String response = UnicodeUtil.decodeUnicode(value.string()).trim();
-//        String response = "{\"content\": {},\"code\": 100,\"message\": \"OK\"}";
+        BaseBean baseBean = gson.fromJson(response, BaseBean.class);
+        if (baseBean.getCode() == 100) {
+        } else {
+            ToastUtil.INSTANCE.showMessage(baseBean.getMessage());
+        }
         return gson.fromJson(response, type);
+
         //先将返回的json数据解析到Response中，如果code==200，则解析到我们的实体基类中，否则抛异常
 //        HttpResult httpResult = gson.fromJson(response, HttpResult.class);
 //        if (httpResult.getCode() == 100) {

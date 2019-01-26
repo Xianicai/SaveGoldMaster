@@ -20,7 +20,7 @@
                         xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/banner"
                         android:layout_width="match_parent"
-                        android:layout_height="275dp"
+                        android:layout_height="225dp"
                         app:AutoPlayTime="2000"
                         app:pointNormal="@drawable/banner_normal"
                         app:pointSelect="@drawable/banner_select"
@@ -81,7 +81,7 @@
                     android:src="@mipmap/ic_home_msg"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="32dp"
                     android:layout_marginRight="20dp"
                     android:layout_height="22dp"
                     android:visibility="visible"/>
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:src="@mipmap/ic_unread_msg"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="28dp"
                     android:visibility="gone"
                     android:layout_marginRight="17dp"/>
         </RelativeLayout>
@@ -101,12 +101,13 @@
             android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:background="@color/white"
-            android:layout_height="48dp"
+            android:layout_height="64dp"
             android:visibility="gone">
         <ImageView android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:src="@mipmap/ic_home_logo"
-                   android:layout_centerInParent="true"/>
+                   android:layout_centerHorizontal="true"
+                 android:layout_marginTop="31dp"/>
         <ImageView
                 android:id="@+id/mImageMsgV2"
                 android:layout_width="wrap_content"
@@ -123,7 +124,7 @@
                 android:src="@mipmap/ic_unread_msg"
                 android:visibility="gone"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="28dp"
                 android:layout_marginRight="17dp"/>
     </RelativeLayout>
 </RelativeLayout>

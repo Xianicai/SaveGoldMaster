@@ -9,7 +9,6 @@ import com.savegoldmaster.home.model.impl.HomeModelImpl
 import com.savegoldmaster.home.presenter.Contract.HomeContract
 import com.savegoldmaster.home.presenter.Contract.LoginContract
 import com.savegoldmaster.utils.ToastUtil
-import com.savegoldmaster.utils.retrofit.HttpResult
 import com.savegoldmaster.utils.retrofit.RespondObserver
 import com.savegoldmaster.utils.retrofit.ThreadTransformer
 import kotlin.math.ln

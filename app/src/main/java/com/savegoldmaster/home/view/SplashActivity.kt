@@ -1,5 +1,6 @@
 package com.savegoldmaster.home.view
 
+import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v4.view.PagerAdapter
@@ -7,6 +8,7 @@ import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.elvishew.xlog.XLog
@@ -26,7 +28,7 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
 
     private var adImageUrl: String? = null
     private var url: String? = null
-    private var start: CountDownTimer? = null
+    private var countDownTimer: CountDownTimer? = null
     private var imgResArr =
         intArrayOf(R.mipmap.ic_360, R.mipmap.ic_bocuishan, R.mipmap.ic_lanchi, R.mipmap.ic_zhongxing)
     private val viewList = ArrayList<View>()
@@ -54,6 +56,7 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
+        initWindows()
         presenter?.getAppAd(6, 1, 2)
         if (firstOpened) {
             if (StringUtil.isNotEmpty(adImageUrl)) {
@@ -103,7 +106,7 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
     }
 
     private fun setAdTime() {
-        start = object : CountDownTimer(4000, 1000) {
+        countDownTimer = object : CountDownTimer(4000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 mViewNext.run {
                     visibility = View.VISIBLE
@@ -189,7 +192,33 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
     }
 
     override fun onDestroy() {
-        start = null
+        if (countDownTimer != null) {
+            countDownTimer!!.cancel()
+        }
         super.onDestroy()
+    }
+
+    private fun initWindows() {
+        val wm = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val height = wm.defaultDisplay.height
+        var result = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        XLog.d("result" + result + "       height" + height)
+        if (firstOpened) {
+            val layoutParams = mParent.layoutParams
+            layoutParams.height = height
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+            mParent.layoutParams = layoutParams
+        } else {
+            val layoutParams = mParentV2.layoutParams
+            layoutParams.height = height
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+            mParentV2.layoutParams = layoutParams
+
+        }
+
     }
 }

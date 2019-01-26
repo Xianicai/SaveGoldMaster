@@ -1,5 +1,6 @@
 package com.savegoldmaster.home.view.adapter
 
+import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
@@ -18,6 +19,9 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import com.savegoldmaster.R
 import com.savegoldmaster.home.model.bean.*
+import com.savegoldmaster.utils.rxbus.EventConstant
+import com.savegoldmaster.utils.rxbus.RxBus
+import com.savegoldmaster.utils.rxbus.RxEvent
 import kotlinx.android.synthetic.main.fragment_mine.*
 import kotlinx.android.synthetic.main.layout_home_gold_price.view.*
 import kotlinx.android.synthetic.main.layout_home_nearby_shop.view.*
@@ -118,16 +122,32 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
     }
 
     inner class GoldPriceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun buildGoldPrice(contentBean: GoldPriceBean?) {
+        init {
+            addEvent()
             itemView.mTvGoldTrend.setOnClickListener {
 
             }
             itemView.mTvRecycleGold.paint.isFakeBoldText = true
-            val priceText = "${contentBean?.content?.goldPrice}元/克"
+
+        }
+
+        fun buildGoldPrice(contentBean: GoldPriceBean?) {
+            val priceText = "${contentBean?.content?.goldPrice} 元/克"
             itemView.mTvGoldPrice.text = SpannableString(priceText).apply {
                 setSpan(RelativeSizeSpan(3.33f), 0, priceText.length - 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 setSpan(StyleSpan(Typeface.BOLD), 0, priceText.length - 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
+        }
+
+        @SuppressLint("CheckResult")
+        private fun addEvent() {
+            RxBus.getDefault().toObservable(RxEvent::class.java)
+                .subscribe { t ->
+                    if (t?.eventType == EventConstant.NOTIF_GOLD_PRICE) {
+                        t.`object` as GoldPriceBean
+                        buildGoldPrice(t.`object` as GoldPriceBean)
+                    }
+                }
         }
     }
 
@@ -171,8 +191,8 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
 
     inner class TotalRecyclerGoldViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun buildRecyclerGold(recyclerGoldBean: RecyclerGoldBean) {
-            val d: Int = (recyclerGoldBean.content.weight / 1000 * 1000).toInt()
-            val kg: Int = ((recyclerGoldBean.content.weight - d * 1000 * 1000) / 1000).toInt()
+            val d: Int = (recyclerGoldBean.content.weight / (1000 * 1000)).toInt()
+            val kg: Int = ((recyclerGoldBean.content.weight - (d * 1000 * 1000)) / 1000).toInt()
             val g: Int = (recyclerGoldBean.content.weight - d * 1000 * 1000 - kg * 1000).toInt()
             if (d > 0) {
                 itemView.mTvTotalTon.text = d.toString()

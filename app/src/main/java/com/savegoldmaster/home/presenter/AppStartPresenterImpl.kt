@@ -8,7 +8,6 @@ import com.savegoldmaster.home.model.impl.HomeModelImpl
 import com.savegoldmaster.home.model.impl.UserModelImpl
 import com.savegoldmaster.home.presenter.Contract.AppStartContract
 import com.savegoldmaster.home.presenter.Contract.UserContract
-import com.savegoldmaster.utils.retrofit.HttpResult
 import com.savegoldmaster.utils.retrofit.RespondObserver
 import com.savegoldmaster.utils.retrofit.ThreadTransformer
 

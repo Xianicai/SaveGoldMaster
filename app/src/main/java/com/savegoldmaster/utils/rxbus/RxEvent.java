@@ -7,11 +7,11 @@ package com.savegoldmaster.utils.rxbus;
 
 public class RxEvent {
     private String eventType;
-    private Object o;
+    private Object object;
 
-    public RxEvent(String eventType, Object o) {
+    public RxEvent(String eventType, Object object) {
         this.eventType = eventType;
-        this.o = o;
+        this.object = object;
 
     }
 
@@ -23,11 +23,11 @@ public class RxEvent {
         this.eventType = eventType;
     }
 
-    public Object getO() {
-        return o;
+    public Object getObject() {
+        return object;
     }
 
-    public void setO(Object o) {
-        this.o = o;
+    public void setObject(Object object) {
+        this.object = object;
     }
 }

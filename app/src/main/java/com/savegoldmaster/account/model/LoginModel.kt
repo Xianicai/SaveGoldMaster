@@ -2,7 +2,6 @@ package com.savegoldmaster.account.model
 
 import com.savegoldmaster.account.model.bean.LoginBean
 import com.savegoldmaster.base.BaseBean
-import com.savegoldmaster.utils.retrofit.HttpResult
 import io.reactivex.Observable
 
 

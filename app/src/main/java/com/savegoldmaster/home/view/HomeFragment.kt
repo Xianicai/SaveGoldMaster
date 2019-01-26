@@ -46,6 +46,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     }
 
     override fun initView(view: View?) {
+        addEvent()
         mImageMsg.setOnClickListener(this)
         mImageClose.setOnClickListener(this)
         mImageMsgV2.setOnClickListener(this)
@@ -126,9 +127,10 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         if (noticeBean.content.count > 0) {
             mImageUnreadV2.visibility = View.VISIBLE
             mImageUnread.visibility = View.VISIBLE
+            RxBus.getDefault().post(RxEvent(EventConstant.MINE_FRAGMENT_MSG,noticeBean.content.count))
         } else {
-            mImageUnreadV2.visibility = View.VISIBLE
-            mImageUnread.visibility = View.VISIBLE
+            mImageUnreadV2.visibility = View.GONE
+            mImageUnread.visibility = View.GONE
         }
     }
 
@@ -138,7 +140,9 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
                 listBean[i] = goldPriceBean as Object
             }
         }
-        homeAdapter?.notifyItemChanged(HomeAdapter.TYPE_HOME_GOLD_PRICE)
+        RxBus.getDefault().post(RxEvent(EventConstant.NOTIF_GOLD_PRICE,goldPriceBean))
+
+//        homeAdapter?.notifyItemChanged(HomeAdapter.TYPE_HOME_GOLD_PRICE)
         countDownTime()
     }
 

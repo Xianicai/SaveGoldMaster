@@ -62,6 +62,14 @@
                         app:placeholderImage="@mipmap/ic_def_head"
                         android:layout_gravity="center_horizontal"
                         android:layout_height="50dp"/>
+                <ImageView android:layout_width="wrap_content"
+                           android:id="@+id/mImageUserDetail"
+                           app:layout_constraintTop_toTopOf="@+id/mImageHead"
+                           android:src="@mipmap/icon_arrows_right"
+                           app:layout_constraintRight_toRightOf="parent"
+                           android:layout_marginRight="20dp"
+                           app:layout_constraintBottom_toBottomOf="@+id/mImageHead"
+                           android:layout_height="wrap_content"/>
                 <TextView
                         android:id="@+id/mTvSetName"
                         android:textSize="14sp"
@@ -243,7 +251,7 @@
                 android:src="@mipmap/ic_msg_black"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginRight="21dp"/>
         <ImageView
                 android:id="@+id/mImageUnread"
@@ -253,7 +261,7 @@
                 android:visibility="gone"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="28dp"
                 android:layout_marginRight="17dp"/>
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

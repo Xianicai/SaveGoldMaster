@@ -3,26 +3,31 @@ package com.savegoldmaster.home.view
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
-import com.savegoldmaster.base.view.BaseMVPActivity
-import com.savegoldmaster.home.presenter.Contract.UserContract
-import com.savegoldmaster.home.presenter.UserPresenterImpl
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.Window
-import android.view.WindowManager
 import com.ashokvarma.bottomnavigation.BottomNavigationItem
 import com.ashokvarma.bottomnavigation.BottomNavigationBar
 import com.ashokvarma.bottomnavigation.BottomNavigationBar.*
 import com.savegoldmaster.R
-import com.savegoldmaster.home.model.bean.UserBean
 import com.savegoldmaster.utils.permissionUtil.PermissionInterface
 import kotlinx.android.synthetic.main.activity_main.*
 import com.savegoldmaster.utils.permissionUtil.PermissionHelper
+import android.view.*
+import android.util.DisplayMetrics
+import com.elvishew.xlog.XLog
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+import android.view.WindowManager
+import android.app.Activity
+
+
+
+
 
 
 class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListener, PermissionInterface {
@@ -38,27 +43,40 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
 
     companion object {
         fun start(context: Context) {
-            context.startActivity(Intent(context, MainActivity::class.java)
+            context.startActivity(
+                Intent(context, MainActivity::class.java)
             )
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        //取消标题栏
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        //取消状态栏
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
         setContentView(R.layout.activity_main)
+        setWindowStatusBarColor(this, R.color.transparent, R.color.black)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         initViews()
+        initWindows()
+    }
+
+    private fun initWindows() {
+        val wm = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val height = wm.defaultDisplay.height
+        var result = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        val layoutParams = mParent.layoutParams
+        layoutParams.height = height
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        mParent.layoutParams = layoutParams
 
     }
 
     private fun initViews() {
+        XLog.d("getScreenHeight" + getScreenHeight(this))
+        XLog.d("getStatusBarHeight" + getStatusBarHeight())
+        XLog.d("getNavigationBarHeight" + getNavigationBarHeight())
         //初始化并发起权限申请
         mPermissionHelper = PermissionHelper(this, this)
         mPermissionHelper?.requestPermissions()
@@ -194,5 +212,62 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
 
     }
 
+    //    获取顶部statusBar高度
+    private fun getStatusBarHeight(): Int {
+        val resources = this.getResources()
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        return resources.getDimensionPixelSize(resourceId)
+    }
 
+    //获取底部navigationBar高度
+    private fun getNavigationBarHeight(): Int {
+        val resources = this.getResources()
+        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        return resources.getDimensionPixelSize(resourceId)
+    }
+
+    //    获取屏幕高度
+    fun getScreenHeight(context: Context): Int {
+        val dm = context.resources.displayMetrics
+        return dm.heightPixels
+    }
+
+    //获取设备是否存在NavigationBar
+    fun checkDeviceHasNavigationBar(context: Context): Boolean {
+        var hasNavigationBar = false
+        val rs = context.resources
+        val id = rs.getIdentifier("config_showNavigationBar", "bool", "android")
+        if (id > 0) {
+            hasNavigationBar = rs.getBoolean(id)
+        }
+        try {
+            val systemPropertiesClass = Class.forName("android.os.SystemProperties")
+            val m = systemPropertiesClass.getMethod("get", String::class.java)
+            val navBarOverride = m.invoke(systemPropertiesClass, "qemu.hw.mainkeys") as String
+            if ("1" == navBarOverride) {
+                hasNavigationBar = false
+            } else if ("0" == navBarOverride) {
+                hasNavigationBar = true
+            }
+        } catch (e: Exception) {
+            //do something
+        }
+
+        return hasNavigationBar
+    }
+
+    fun setWindowStatusBarColor(activity: Activity, statusBarColor: Int, navigationBarColor: Int) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                val window = activity.window
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                window.statusBarColor = activity.resources.getColor(statusBarColor)
+                //底部导航栏
+                window.navigationBarColor = activity.resources.getColor(navigationBarColor)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
 }

@@ -1,17 +1,19 @@
 package com.savegoldmaster.base.view;
 
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 
 import com.savegoldmaster.base.presenter.BasePresenter;
 import com.trello.rxlifecycle2.components.support.RxFragmentActivity;
+
+import java.lang.reflect.Method;
 
 /**
  * ZY:基础的Aty,实现简单的接口，方法
@@ -118,40 +120,65 @@ public abstract class BaseMVPActivity<T extends BasePresenter> extends RxFragmen
         }
     }
 
-    /**
-     * 如果需要内容紧贴着StatusBar
-     * 应该在对应的xml布局文件中，设置根布局fitsSystemWindows=true。
-     */
-    private View contentViewGroup;
 
-    public void setFitSystemWindow(boolean fitSystemWindow) {
-        if (contentViewGroup == null) {
-            contentViewGroup = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+
+    /**
+     * 检查是否存在虚拟按键栏
+     *
+     * @param context
+     * @return
+     */
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    public static boolean hasNavBar(Context context) {
+        Resources res = context.getResources();
+        int resourceId = res.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (resourceId != 0) {
+            boolean hasNav = res.getBoolean(resourceId);
+            // check override flag
+            String sNavBarOverride = getNavBarOverride();
+            if ("1".equals(sNavBarOverride)) {
+                hasNav = false;
+            } else if ("0".equals(sNavBarOverride)) {
+                hasNav = true;
+            }
+            return hasNav;
+        } else { // fallback
+            return !ViewConfiguration.get(context).hasPermanentMenuKey();
         }
-        contentViewGroup.setFitsSystemWindows(fitSystemWindow);
     }
 
     /**
-     * 为了兼容4.4的抽屉布局->透明状态栏
+     * 判断虚拟按键栏是否重写
+     *
+     * @return
      */
-//    public void setDrawerLayoutFitSystemWindow() {
-//        if (Build.VERSION.SDK_INT == 19) {//19表示4.4
-//            int statusBarHeight = getStatusHeight(this);
-//            if (contentViewGroup == null) {
-//                contentViewGroup = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
-//            }
-//            if (contentViewGroup instanceof DrawerLayout) {
-//                DrawerLayout drawerLayout = (DrawerLayout) contentViewGroup;
-//                drawerLayout.setClipToPadding(true);
-//                drawerLayout.setFitsSystemWindows(false);
-//                for (int i = 0; i < drawerLayout.getChildCount(); i++) {
-//                    View child = drawerLayout.getChildAt(i);
-//                    child.setFitsSystemWindows(false);
-//                    child.setPadding(0,statusBarHeight, 0, 0);
-//                }
-//
-//            }
-//        }
-//    }
+    private static String getNavBarOverride() {
+        String sNavBarOverride = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            try {
+                Class c = Class.forName("android.os.SystemProperties");
+                Method m = c.getDeclaredMethod("get", String.class);
+                m.setAccessible(true);
+                sNavBarOverride = (String) m.invoke(null, "qemu.hw.mainkeys");
+            } catch (Throwable e) {
+            }
+        }
+        return sNavBarOverride;
+    }
 
+    //获取虚拟按键的高度
+    public static int getNavigationBarHeight(Context context) {
+        int result = 0;
+        if (hasNavBar(context)) {
+            Resources res = context.getResources();
+            int resourceId = res.getIdentifier("navigation_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                result = res.getDimensionPixelSize(resourceId);
+            }
+        }
+        return result;
+
+
+
+    }
 }

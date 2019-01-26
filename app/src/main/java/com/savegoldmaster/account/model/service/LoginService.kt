@@ -3,7 +3,6 @@ package com.savegoldmaster.home.model.service
 import com.savegoldmaster.account.model.bean.LoginBean
 import com.savegoldmaster.base.BaseBean
 import com.savegoldmaster.common.Urls
-import com.savegoldmaster.utils.retrofit.HttpResult
 import io.reactivex.Observable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
