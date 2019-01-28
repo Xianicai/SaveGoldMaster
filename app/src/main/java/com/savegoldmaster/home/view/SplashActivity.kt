@@ -3,12 +3,10 @@ package com.savegoldmaster.home.view
 import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.PersistableBundle
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.elvishew.xlog.XLog
@@ -36,6 +34,11 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
     private var firstOpened: Boolean = false
 
     private var presenter: AppStartPresenterImpl? = null
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+
+    }
+
     override fun getLayoutId(): Int {
         SharedPreferencesHelper(this, "AdBean").apply {
             adImageUrl = getSharedPreference("adImageUrl", "") as String?
@@ -206,7 +209,6 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
         if (resourceId > 0) {
             result = resources.getDimensionPixelSize(resourceId)
         }
-        XLog.d("result" + result + "       height" + height)
         if (firstOpened) {
             val layoutParams = mParent.layoutParams
             layoutParams.height = height

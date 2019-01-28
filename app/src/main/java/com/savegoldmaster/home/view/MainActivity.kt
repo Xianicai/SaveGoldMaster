@@ -26,10 +26,6 @@ import android.view.WindowManager
 import android.app.Activity
 
 
-
-
-
-
 class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListener, PermissionInterface {
 
     private val mTitles = arrayOf("首页", "爱有金", "我的")
@@ -51,6 +47,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.TranslucentTheme)
         setContentView(R.layout.activity_main)
         setWindowStatusBarColor(this, R.color.transparent, R.color.black)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN

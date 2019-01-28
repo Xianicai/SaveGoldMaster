@@ -30,7 +30,7 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/TranslucentTheme">
+            android:theme="@style/StartTheme">
         <activity
                 android:name="com.savegoldmaster.home.view.MainActivity"
                 android:screenOrientation="portrait">

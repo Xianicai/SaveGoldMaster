@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.*;
 
+import com.savegoldmaster.R;
 import com.savegoldmaster.base.presenter.BasePresenter;
 import com.trello.rxlifecycle2.components.support.RxFragmentActivity;
 
@@ -25,6 +26,8 @@ public abstract class BaseMVPActivity<T extends BasePresenter> extends RxFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.TranslucentTheme);
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //取消标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
