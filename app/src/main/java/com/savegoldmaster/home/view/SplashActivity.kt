@@ -6,10 +6,12 @@ import android.os.CountDownTimer
 import android.os.PersistableBundle
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.elvishew.xlog.XLog
 import com.savegoldmaster.R
 import com.savegoldmaster.base.view.BaseMVPActivity
 import com.savegoldmaster.home.model.bean.BannerBean
@@ -19,7 +21,7 @@ import com.savegoldmaster.utils.SharedPreferencesHelper
 import com.savegoldmaster.utils.StringUtil
 import kotlinx.android.synthetic.main.activity_start_app.*
 import kotlinx.android.synthetic.main.layout_app_guide.*
-import java.util.ArrayList
+import java.util.*
 
 class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContract.AppStartView, View.OnClickListener {
 
@@ -59,7 +61,7 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
-        initWindows()
+//        initWindows()
         presenter?.getAppAd(6, 1, 2)
         if (firstOpened) {
             if (StringUtil.isNotEmpty(adImageUrl)) {

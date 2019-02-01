@@ -82,6 +82,7 @@
             android:layout_marginRight="150dp"
             android:inputType="number"
             android:textSize="14sp"
+            android:textColor="@color/color_333333"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -117,6 +118,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="150dp"
             android:textSize="14sp"
+            android:textColor="@color/color_333333"
             android:digits="0123456789qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -188,18 +190,19 @@
             android:visibility="gone"
             android:layout_marginTop="15dp"
             android:layout_marginRight="30dp"/>
-    <TextView
+    <com.savegoldmaster.utils.view.BorderView
             android:id="@+id/mTvLogin"
             android:layout_width="0dp"
+            app:borderViewRadius="2dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:text="登录"
+            app:borderViewText="登录"
             android:layout_marginHorizontal="20dp"
-            android:background="#80DDC899"
+            app:borderViewBackgroundColor="#80DDC899"
             android:layout_marginTop="100dp"
             android:gravity="center"
-            android:textColor="@color/color_EEEEEE"
-            android:textSize="17sp"
+            app:borderViewTextSize="17sp"
+            app:borderViewTextColor="@color/white"
             app:layout_constraintTop_toBottomOf="@+id/view_password"
             android:layout_height="44dp"/>
 </android.support.constraint.ConstraintLayout>

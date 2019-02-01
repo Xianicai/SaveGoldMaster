@@ -1,29 +1,25 @@
 package com.savegoldmaster.home.view
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import com.ashokvarma.bottomnavigation.BottomNavigationItem
+import android.view.ViewGroup
+import android.view.WindowManager
 import com.ashokvarma.bottomnavigation.BottomNavigationBar
-import com.ashokvarma.bottomnavigation.BottomNavigationBar.*
+import com.ashokvarma.bottomnavigation.BottomNavigationBar.BACKGROUND_STYLE_STATIC
+import com.ashokvarma.bottomnavigation.BottomNavigationItem
+import com.elvishew.xlog.XLog
 import com.savegoldmaster.R
+import com.savegoldmaster.utils.permissionUtil.PermissionHelper
 import com.savegoldmaster.utils.permissionUtil.PermissionInterface
 import kotlinx.android.synthetic.main.activity_main.*
-import com.savegoldmaster.utils.permissionUtil.PermissionHelper
-import android.view.*
-import android.util.DisplayMetrics
-import com.elvishew.xlog.XLog
-import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-import android.view.WindowManager
-import android.app.Activity
 
 
 class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListener, PermissionInterface {
@@ -49,10 +45,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
         super.onCreate(savedInstanceState)
         setTheme(R.style.TranslucentTheme)
         setContentView(R.layout.activity_main)
-        setWindowStatusBarColor(this, R.color.transparent, R.color.black)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        setWindowStatusBarColor(this, R.color.white, R.color.black)
+//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         initViews()
-        initWindows()
+//        initWindows()
     }
 
     private fun initWindows() {
@@ -78,8 +74,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
         mPermissionHelper = PermissionHelper(this, this)
         mPermissionHelper?.requestPermissions()
         mBottomNavigationBar
-            .setActiveColor(R.color.bg_yellow)
-            .setInActiveColor(R.color.black)
+            .setActiveColor(R.color.color_EDA835)
+            .setInActiveColor(R.color.color_333333)
             .setBarBackgroundColor(R.color.white)
         mBottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED)
         mBottomNavigationBar.setBackgroundStyle(BACKGROUND_STYLE_STATIC)
@@ -260,11 +256,28 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
                 window.statusBarColor = activity.resources.getColor(statusBarColor)
                 //底部导航栏
-                window.navigationBarColor = activity.resources.getColor(navigationBarColor)
+//                window.navigationBarColor = activity.resources.getColor(navigationBarColor)
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
     }
+
+
+    fun hasNotchInScreen(context: Context): Boolean {
+        var ret = false
+        try {
+            val cl = context.classLoader
+            val HwNotchSizeUtil = cl.loadClass("com.huawei.android.util.HwNotchSizeUtil")
+            val get = HwNotchSizeUtil.getMethod("hasNotchInScreen")
+            ret = get.invoke(HwNotchSizeUtil) as Boolean
+        } catch (e: ClassNotFoundException) {
+        } catch (e: NoSuchMethodException) {
+        } catch (e: Exception) {
+        } finally {
+            return ret
+        }
+    }
+
 }

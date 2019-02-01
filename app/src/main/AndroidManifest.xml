@@ -22,7 +22,9 @@
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
     <uses-permission android:name="com.savegoldmaster.permission.JPUSH_MESSAGE"/>
 
-
+    <meta-data
+            android:name="android.notch_support"
+            android:value="true"/>
     <application
             android:name="com.savegoldmaster.base.BaseApplication"
             android:allowBackup="true"
@@ -31,6 +33,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/StartTheme">
+        <meta-data android:name="android.notch_support" android:value="true"/>
         <activity
                 android:name="com.savegoldmaster.home.view.MainActivity"
                 android:screenOrientation="portrait">

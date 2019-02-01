@@ -1,18 +1,20 @@
 package com.savegoldmaster.base.view;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.view.*;
-
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.Window;
+import android.view.WindowManager;
 import com.savegoldmaster.R;
 import com.savegoldmaster.base.presenter.BasePresenter;
 import com.trello.rxlifecycle2.components.support.RxFragmentActivity;
+import kotlin.jvm.internal.Intrinsics;
 
 import java.lang.reflect.Method;
 
@@ -28,12 +30,14 @@ public abstract class BaseMVPActivity<T extends BasePresenter> extends RxFragmen
         super.onCreate(savedInstanceState);
         setTheme(R.style.TranslucentTheme);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //取消标题栏
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //取消状态栏
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        //取消标题栏
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        //取消状态栏
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setWindowStatusBarColor(this, R.color.white, R.color.black);
+
         setContentView(getLayoutId());
 
         initPresenter();
@@ -182,6 +186,21 @@ public abstract class BaseMVPActivity<T extends BasePresenter> extends RxFragmen
         return result;
 
 
+
+    }
+
+    public final void setWindowStatusBarColor(Activity activity, int statusBarColor, int navigationBarColor) {
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = activity.getWindow();
+                window.addFlags(Integer.MIN_VALUE);
+                Intrinsics.checkExpressionValueIsNotNull(window, "window");
+                window.setStatusBarColor(activity.getResources().getColor(statusBarColor));
+            }
+        } catch (Exception var5) {
+            var5.printStackTrace();
+        }
 
     }
 }

@@ -7,26 +7,24 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v4.content.ContextCompat
 import android.text.Editable
-import android.text.InputType
-import android.text.TextWatcher
-import android.view.View
-import android.widget.TextView
-import com.savegoldmaster.base.view.BaseMVPActivity
-import com.savegoldmaster.utils.ToastUtil
-import java.util.regex.Pattern
 import android.text.InputFilter
+import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.view.View
+import android.widget.TextView
 import com.savegoldmaster.R
 import com.savegoldmaster.account.model.bean.LoginBean
+import com.savegoldmaster.base.view.BaseMVPActivity
 import com.savegoldmaster.home.presenter.Contract.LoginContract
 import com.savegoldmaster.home.presenter.LoginPresenterImpl
 import com.savegoldmaster.utils.SharedPreferencesHelper
-import com.savegoldmaster.utils.StringUtil
+import com.savegoldmaster.utils.ToastUtil
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
 import com.savegoldmaster.utils.rxbus.RxEvent
 import kotlinx.android.synthetic.main.activity_login.*
+import java.util.regex.Pattern
 
 
 class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.LoginView, View.OnClickListener {
@@ -77,9 +75,9 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (mEdPhoneNum.text.toString().trim().length == 11 && mEdPassword.text.toString().trim().length > 5) {
-                    mTvLogin.setBackgroundColor(ContextCompat.getColor(this@LoginActivity, R.color.color_DDC899))
+                    mTvLogin.setMBackgroundColor(ContextCompat.getColor(this@LoginActivity, R.color.color_DDC899))
                 } else {
-                    mTvLogin.setBackgroundColor(Color.parseColor("#80DDC899"))
+                    mTvLogin.setMBackgroundColor(Color.parseColor("#80DDC899"))
                 }
             }
 
@@ -93,9 +91,9 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (mEdPhoneNum.text.toString().trim().length == 11 && mEdPassword.text.toString().trim().length > 5) {
-                    mTvLogin.setBackgroundColor(ContextCompat.getColor(this@LoginActivity, R.color.color_DDC899))
+                    mTvLogin.setMBackgroundColor(ContextCompat.getColor(this@LoginActivity, R.color.color_DDC899))
                 } else {
-                    mTvLogin.setBackgroundColor(Color.parseColor("#80DDC899"))
+                    mTvLogin.setMBackgroundColor(Color.parseColor("#80DDC899"))
                 }
             }
 
