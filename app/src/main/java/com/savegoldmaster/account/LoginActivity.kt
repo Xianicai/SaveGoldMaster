@@ -1,8 +1,10 @@
 package com.savegoldmaster.account
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v4.content.ContextCompat
@@ -12,6 +14,7 @@ import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.View
+import android.view.WindowManager
 import android.widget.TextView
 import com.savegoldmaster.R
 import com.savegoldmaster.account.model.bean.LoginBean
@@ -43,6 +46,12 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
     private var start: CountDownTimer? = null
     override fun getLayoutId(): Int {
         return R.layout.activity_login
+    }
+
+    override fun initWindow() {
+        super.initWindow()
+        setTheme(R.style.TranslucentTheme)
+        setWindowStatusBarColors(this)
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
@@ -133,17 +142,17 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
             mTvLogin -> {
                 val phoneNum = mEdPhoneNum.text.toString().trim()
                 val password = mEdPassword.text.toString().trim()
-                if (phoneNum.isEmpty()){
+                if (phoneNum.isEmpty()) {
                     ToastUtil.showMessage("请输入的手机号")
                     return
                 }
-                if (!isCellphone(phoneNum)){
+                if (!isCellphone(phoneNum)) {
                     ToastUtil.showMessage("您输入的手机号不正确")
                     return
                 }
-                if (loginType == FASTER_LOGIN  && password.length == 6) {
+                if (loginType == FASTER_LOGIN && password.length == 6) {
                     loginPresenterImpl?.fasterLogin(phoneNum, password, "", "", "")
-                } else if (loginType == ACCOUNT_LOGIN  && password.length >= 6) {
+                } else if (loginType == ACCOUNT_LOGIN && password.length >= 6) {
                     loginPresenterImpl?.accountLogin(phoneNum, password)
                 } else {
                     return
@@ -264,5 +273,19 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         start = null
         super.onDestroy()
     }
+    fun setWindowStatusBarColors(activity: Activity) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                val window = activity.window
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+//                window.statusBarColor = activity.resources.getColor(statusBarColor)
+                window.statusBarColor = window.navigationBarColor
+                //底部导航栏
+//                window.navigationBarColor = activity.resources.getColor(navigationBarColor)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
+    }
 }

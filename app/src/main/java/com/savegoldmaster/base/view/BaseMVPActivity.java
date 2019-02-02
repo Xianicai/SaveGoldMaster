@@ -1,22 +1,13 @@
 package com.savegoldmaster.base.view;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.Window;
-import android.view.WindowManager;
-import com.savegoldmaster.R;
 import com.savegoldmaster.base.presenter.BasePresenter;
 import com.trello.rxlifecycle2.components.support.RxFragmentActivity;
 import kotlin.jvm.internal.Intrinsics;
-
-import java.lang.reflect.Method;
 
 /**
  * ZY:基础的Aty,实现简单的接口，方法
@@ -28,21 +19,15 @@ public abstract class BaseMVPActivity<T extends BasePresenter> extends RxFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.TranslucentTheme);
-
-//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//        //取消标题栏
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        //取消状态栏
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setWindowStatusBarColor(this, R.color.white, R.color.black);
-
+        initWindow();
         setContentView(getLayoutId());
-
+//        setWindowStatusBarColor(this);
         initPresenter();
         //初始化控件
         initViews(savedInstanceState);
+    }
+
+    public void initWindow() {
     }
 
     protected void initPresenter() {
@@ -90,113 +75,14 @@ public abstract class BaseMVPActivity<T extends BasePresenter> extends RxFragmen
 
     }
 
-
-    /**
-     * 全透状态栏
-     */
-    public void setStatusBarFullTransparent() {
-        if (Build.VERSION.SDK_INT >= 21) {//21表示5.0
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-        } else if (Build.VERSION.SDK_INT >= 19) {//19表示4.4
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //虚拟键盘也透明
-            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-    }
-
-    /**
-     * 半透明状态栏
-     */
-    public void setHalfTransparent() {
-
-        if (Build.VERSION.SDK_INT >= 21) {//21表示5.0
-            View decorView = getWindow().getDecorView();
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            decorView.setSystemUiVisibility(option);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-        } else if (Build.VERSION.SDK_INT >= 19) {//19表示4.4
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //虚拟键盘也透明
-            // getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-    }
-
-
-
-    /**
-     * 检查是否存在虚拟按键栏
-     *
-     * @param context
-     * @return
-     */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static boolean hasNavBar(Context context) {
-        Resources res = context.getResources();
-        int resourceId = res.getIdentifier("config_showNavigationBar", "bool", "android");
-        if (resourceId != 0) {
-            boolean hasNav = res.getBoolean(resourceId);
-            // check override flag
-            String sNavBarOverride = getNavBarOverride();
-            if ("1".equals(sNavBarOverride)) {
-                hasNav = false;
-            } else if ("0".equals(sNavBarOverride)) {
-                hasNav = true;
-            }
-            return hasNav;
-        } else { // fallback
-            return !ViewConfiguration.get(context).hasPermanentMenuKey();
-        }
-    }
-
-    /**
-     * 判断虚拟按键栏是否重写
-     *
-     * @return
-     */
-    private static String getNavBarOverride() {
-        String sNavBarOverride = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            try {
-                Class c = Class.forName("android.os.SystemProperties");
-                Method m = c.getDeclaredMethod("get", String.class);
-                m.setAccessible(true);
-                sNavBarOverride = (String) m.invoke(null, "qemu.hw.mainkeys");
-            } catch (Throwable e) {
-            }
-        }
-        return sNavBarOverride;
-    }
-
-    //获取虚拟按键的高度
-    public static int getNavigationBarHeight(Context context) {
-        int result = 0;
-        if (hasNavBar(context)) {
-            Resources res = context.getResources();
-            int resourceId = res.getIdentifier("navigation_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                result = res.getDimensionPixelSize(resourceId);
-            }
-        }
-        return result;
-
-
-
-    }
-
-    public final void setWindowStatusBarColor(Activity activity, int statusBarColor, int navigationBarColor) {
-
+    @SuppressLint("ResourceType")
+    public final void setWindowStatusBarColor(Activity activity) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = activity.getWindow();
                 window.addFlags(Integer.MIN_VALUE);
                 Intrinsics.checkExpressionValueIsNotNull(window, "window");
-                window.setStatusBarColor(activity.getResources().getColor(statusBarColor));
+                window.setStatusBarColor(activity.getResources().getColor(window.getNavigationBarColor()));
             }
         } catch (Exception var5) {
             var5.printStackTrace();

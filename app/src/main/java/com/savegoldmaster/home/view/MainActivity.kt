@@ -15,7 +15,6 @@ import android.view.WindowManager
 import com.ashokvarma.bottomnavigation.BottomNavigationBar
 import com.ashokvarma.bottomnavigation.BottomNavigationBar.BACKGROUND_STYLE_STATIC
 import com.ashokvarma.bottomnavigation.BottomNavigationItem
-import com.elvishew.xlog.XLog
 import com.savegoldmaster.R
 import com.savegoldmaster.utils.permissionUtil.PermissionHelper
 import com.savegoldmaster.utils.permissionUtil.PermissionInterface
@@ -67,9 +66,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
     }
 
     private fun initViews() {
-        XLog.d("getScreenHeight" + getScreenHeight(this))
-        XLog.d("getStatusBarHeight" + getStatusBarHeight())
-        XLog.d("getNavigationBarHeight" + getNavigationBarHeight())
         //初始化并发起权限申请
         mPermissionHelper = PermissionHelper(this, this)
         mPermissionHelper?.requestPermissions()
@@ -205,56 +201,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
 
     }
 
-    //    获取顶部statusBar高度
-    private fun getStatusBarHeight(): Int {
-        val resources = this.getResources()
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        return resources.getDimensionPixelSize(resourceId)
-    }
-
-    //获取底部navigationBar高度
-    private fun getNavigationBarHeight(): Int {
-        val resources = this.getResources()
-        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        return resources.getDimensionPixelSize(resourceId)
-    }
-
-    //    获取屏幕高度
-    fun getScreenHeight(context: Context): Int {
-        val dm = context.resources.displayMetrics
-        return dm.heightPixels
-    }
-
-    //获取设备是否存在NavigationBar
-    fun checkDeviceHasNavigationBar(context: Context): Boolean {
-        var hasNavigationBar = false
-        val rs = context.resources
-        val id = rs.getIdentifier("config_showNavigationBar", "bool", "android")
-        if (id > 0) {
-            hasNavigationBar = rs.getBoolean(id)
-        }
-        try {
-            val systemPropertiesClass = Class.forName("android.os.SystemProperties")
-            val m = systemPropertiesClass.getMethod("get", String::class.java)
-            val navBarOverride = m.invoke(systemPropertiesClass, "qemu.hw.mainkeys") as String
-            if ("1" == navBarOverride) {
-                hasNavigationBar = false
-            } else if ("0" == navBarOverride) {
-                hasNavigationBar = true
-            }
-        } catch (e: Exception) {
-            //do something
-        }
-
-        return hasNavigationBar
-    }
-
     fun setWindowStatusBarColor(activity: Activity, statusBarColor: Int, navigationBarColor: Int) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 val window = activity.window
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                window.statusBarColor = activity.resources.getColor(statusBarColor)
+//                window.statusBarColor = activity.resources.getColor(statusBarColor)
+                window.statusBarColor = window.navigationBarColor
                 //底部导航栏
 //                window.navigationBarColor = activity.resources.getColor(navigationBarColor)
             }
@@ -264,20 +217,5 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
 
     }
 
-
-    fun hasNotchInScreen(context: Context): Boolean {
-        var ret = false
-        try {
-            val cl = context.classLoader
-            val HwNotchSizeUtil = cl.loadClass("com.huawei.android.util.HwNotchSizeUtil")
-            val get = HwNotchSizeUtil.getMethod("hasNotchInScreen")
-            ret = get.invoke(HwNotchSizeUtil) as Boolean
-        } catch (e: ClassNotFoundException) {
-        } catch (e: NoSuchMethodException) {
-        } catch (e: Exception) {
-        } finally {
-            return ret
-        }
-    }
 
 }

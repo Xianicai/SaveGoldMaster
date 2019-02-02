@@ -3,7 +3,6 @@ package com.savegoldmaster.home.view
 import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.PersistableBundle
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
@@ -36,10 +35,7 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
     private var firstOpened: Boolean = false
 
     private var presenter: AppStartPresenterImpl? = null
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
 
-    }
 
     override fun getLayoutId(): Int {
         SharedPreferencesHelper(this, "AdBean").apply {

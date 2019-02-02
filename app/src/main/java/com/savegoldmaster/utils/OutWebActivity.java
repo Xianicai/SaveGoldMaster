@@ -10,10 +10,7 @@ import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.webkit.*;
 import android.widget.TextView;
 import com.savegoldmaster.R;
 
@@ -101,7 +98,10 @@ public class OutWebActivity extends AppCompatActivity {
             }
         });
     }
-
+    @JavascriptInterface
+    public void hello(String msg) {
+        System.out.println("JS调用了Android的hello方法");
+    }
     //点击返回上一页面而不是退出浏览器
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
