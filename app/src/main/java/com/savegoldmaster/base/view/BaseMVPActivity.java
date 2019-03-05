@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
+import com.savegoldmaster.R;
 import com.savegoldmaster.base.presenter.BasePresenter;
 import com.trello.rxlifecycle2.components.support.RxFragmentActivity;
 import kotlin.jvm.internal.Intrinsics;
@@ -20,6 +21,7 @@ public abstract class BaseMVPActivity<T extends BasePresenter> extends RxFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initWindow();
+        setTheme(R.style.TranslucentTheme);
         setContentView(getLayoutId());
 //        setWindowStatusBarColor(this);
         initPresenter();

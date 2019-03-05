@@ -5,7 +5,6 @@ import com.savegoldmaster.account.model.impl.LoginModelImpl
 import com.savegoldmaster.base.BaseBean
 import com.savegoldmaster.base.presenter.BasePresenterImpl
 import com.savegoldmaster.home.presenter.Contract.LoginContract
-import com.savegoldmaster.utils.ToastUtil
 import com.savegoldmaster.utils.retrofit.RespondObserver
 import com.savegoldmaster.utils.retrofit.ThreadTransformer
 
@@ -42,7 +41,11 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
             .subscribe(object : RespondObserver<LoginBean>() {
                 override fun onSuccess(result: LoginBean?) {
                     super.onSuccess(result)
-                    mView?.accountLoginSuccess(result!!)
+                    if (result?.code == 1003){
+                        mView?.accountLoginFail(result)
+                    }else{
+                        mView?.accountLoginSuccess(result!!)
+                    }
                 }
             })
     }

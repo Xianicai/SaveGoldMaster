@@ -19,13 +19,16 @@ import android.widget.TextView
 import com.savegoldmaster.R
 import com.savegoldmaster.account.model.bean.LoginBean
 import com.savegoldmaster.base.view.BaseMVPActivity
+import com.savegoldmaster.common.WebUrls
 import com.savegoldmaster.home.presenter.Contract.LoginContract
 import com.savegoldmaster.home.presenter.LoginPresenterImpl
+import com.savegoldmaster.utils.ConfirmDialog
 import com.savegoldmaster.utils.SharedPreferencesHelper
 import com.savegoldmaster.utils.ToastUtil
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
 import com.savegoldmaster.utils.rxbus.RxEvent
+import com.savegoldmaster.utils.webutil.OutWebActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.regex.Pattern
 
@@ -34,16 +37,19 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
 
 
     companion object {
+        var ACCOUNT_LOGIN = 1
+        var FASTER_LOGIN = 2
         fun start(context: Context) {
             context.startActivity(Intent(context, LoginActivity::class.java))
         }
     }
 
-    private var ACCOUNT_LOGIN = 1
-    private var FASTER_LOGIN = 2
+
     private var loginType = ACCOUNT_LOGIN
     private var loginPresenterImpl: LoginPresenterImpl? = null
-    private var start: CountDownTimer? = null
+    private var countDownTimer: CountDownTimer? = null
+    private var loginBean: LoginBean? = null
+    private var forgetPasw = 0
     override fun getLayoutId(): Int {
         return R.layout.activity_login
     }
@@ -62,20 +68,17 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         mImageClearPhoneNum.setOnClickListener(this)
         mTvGetCode.setOnClickListener(this)
         mTvLogin.setOnClickListener(this)
+        mTvForgetPassword.setOnClickListener(this)
         mImageHiddenPassword.setOnClickListener(this)
-        if (mEdPassword.transformationMethod is HideReturnsTransformationMethod) {
-            mImageHiddenPassword.setImageResource(R.mipmap.ic_hidden_password)
-            mEdPassword.transformationMethod = PasswordTransformationMethod.getInstance()
-        } else {
-            mImageHiddenPassword.setImageResource(R.mipmap.ic_open_eyes)
-            mEdPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
-        }
+        mImageHiddenPassword.setImageResource(R.mipmap.ic_hidden_password)
+        mEdPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+
         mEdPhoneNum.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 mImageClearPhoneNum.visibility =
                         if (mEdPhoneNum.text.toString().trim().isNotEmpty()) View.VISIBLE else View.GONE
                 if (mEdPhoneNum.text.toString().trim().length == 11 && !isCellphone(mEdPhoneNum.text.toString().trim())) {
-                    ToastUtil.showMessage("请输入合法的手机号")
+                    ToastUtil.showMessage("请检查您的手机号是否正确")
                 }
             }
 
@@ -136,7 +139,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
                     loginPresenterImpl?.getPhoneCode(mEdPhoneNum.text.toString().trim())
                     setTime()
                 } else {
-                    ToastUtil.showMessage("您输入的手机号不正确")
+                    ToastUtil.showMessage("请检查您的手机号是否正确")
                 }
             }
             mTvLogin -> {
@@ -147,7 +150,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
                     return
                 }
                 if (!isCellphone(phoneNum)) {
-                    ToastUtil.showMessage("您输入的手机号不正确")
+                    ToastUtil.showMessage("请检查您的手机号是否正确")
                     return
                 }
                 if (loginType == FASTER_LOGIN && password.length == 6) {
@@ -171,14 +174,18 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
 
 
             }
+            mTvForgetPassword -> {
+                OutWebActivity.start(this, WebUrls.FIND_PASSWORD)
+            }
         }
     }
 
     override fun getPhoneCode() {
-        ToastUtil.showMessage("验证码发送成功，请注意查收")
+        ToastUtil.showMessage("验证码已发送至您的手机，请注意查收")
     }
 
     override fun fasterLoginSuccess(loginBean: LoginBean) {
+        this.loginBean = loginBean
         loginSuccess(loginBean)
     }
 
@@ -191,17 +198,25 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
 
     }
 
-    override fun accountLoginFail() {
+    override fun accountLoginFail(result: LoginBean?) {
+        ToastUtil.showMessage(result?.message)
+        if (result?.code == 1003) {
+            forgetPasw += 1
+        }
+        if (forgetPasw > 2) {
+            showTips()
+        }
     }
 
-    private fun loginSuccess(loginBean: LoginBean) {
+    private fun loginSuccess(loginBean: LoginBean?) {
+        loginBean ?: return
         SharedPreferencesHelper(this@LoginActivity, "UserBean").apply {
             put("token", loginBean.content.token)
             put("userId", loginBean.content.userId)
             put("authorization", "${loginBean.content.userId}_${loginBean.content.token}")
         }
         ToastUtil.showMessage("登录成功")
-        RxBus.getDefault().post(RxEvent(EventConstant.USER_LOGIN, loginBean.content.userId))
+        RxBus.getDefault().post(RxEvent(EventConstant.USER_LOGIN, loginType))
         finish()
     }
 
@@ -218,30 +233,35 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         mEdPassword.setText("")
         //设置不同状态下文字的显示隐藏
         if (loginType == ACCOUNT_LOGIN) {
+            mTvTime.visibility = View.GONE
             mImageHiddenPassword.visibility = View.VISIBLE
             mTvGetCode.visibility = View.GONE
             mTvTips.visibility = View.GONE
             mTvForgetPassword.visibility = View.VISIBLE
+            mImageHiddenPassword.setImageResource(R.mipmap.ic_hidden_password)
             mEdPassword.apply {
+                transformationMethod = PasswordTransformationMethod.getInstance()
                 hint = "请输入密码"
-//                inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
                 filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
+            }
+            if (countDownTimer != null) {
+                countDownTimer!!.cancel()
             }
         } else {
             mEdPassword.apply {
+                transformationMethod = HideReturnsTransformationMethod.getInstance()
                 mImageHiddenPassword.visibility = View.GONE
                 mTvGetCode.visibility = View.VISIBLE
                 mTvTips.visibility = View.VISIBLE
                 mTvForgetPassword.visibility = View.GONE
                 hint = "请输入验证码"
-//                inputType = InputType.TYPE_CLASS_NUMBER
                 filters = arrayOf<InputFilter>(InputFilter.LengthFilter(6))
             }
         }
     }
 
     private fun setTime() {
-        start = object : CountDownTimer(60000, 1000) {
+        countDownTimer = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 mTvGetCode.visibility = View.GONE
                 mTvTime.run {
@@ -253,7 +273,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
             override fun onFinish() {
                 mTvGetCode.run {
                     visibility = View.VISIBLE
-                    text = "重新获取验证码"
+                    text = "重新获取"
                 }
                 mTvTime.visibility = View.GONE
             }
@@ -270,9 +290,25 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
     }
 
     override fun onDestroy() {
-        start = null
+        if (countDownTimer != null) {
+            countDownTimer!!.cancel()
+        }
         super.onDestroy()
     }
+
+    private fun showTips() {
+        ConfirmDialog(this)
+            .setTitle("提示")
+            .setMessage("是否找回密码？")
+            .setTwoButtonListener("取消",
+                { dialog, v ->
+                    dialog.dismiss()
+                }, "前往", { dialog, v ->
+                    OutWebActivity.start(this, WebUrls.FIND_PASSWORD)
+                    dialog.dismiss()
+                }).show()
+    }
+
     fun setWindowStatusBarColors(activity: Activity) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -286,6 +322,5 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 }

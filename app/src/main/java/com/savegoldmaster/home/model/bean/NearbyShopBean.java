@@ -16,7 +16,10 @@ public class NearbyShopBean extends BaseBean {
     public void setContent(List<ContentBean> content) {
         this.content = content;
     }
-
+    @Override
+    public boolean isSuccess() {
+        return getCode() == 100;
+    }
     public static class ContentBean {
         /**
          * address : 北京市西城区北京市西城区宣武门外大街8号庄胜崇光百货F1

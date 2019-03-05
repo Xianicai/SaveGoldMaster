@@ -1,6 +1,5 @@
 package com.savegoldmaster.home.model.service
 
-import com.savegoldmaster.base.BaseBean
 import com.savegoldmaster.common.Urls
 import com.savegoldmaster.home.model.bean.*
 import io.reactivex.Observable

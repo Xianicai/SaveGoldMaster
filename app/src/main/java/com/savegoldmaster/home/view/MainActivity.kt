@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.ViewGroup
 import android.view.WindowManager
 import com.ashokvarma.bottomnavigation.BottomNavigationBar
 import com.ashokvarma.bottomnavigation.BottomNavigationBar.BACKGROUND_STYLE_STATIC
@@ -50,20 +49,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
 //        initWindows()
     }
 
-    private fun initWindows() {
-        val wm = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val height = wm.defaultDisplay.height
-        var result = 0
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            result = resources.getDimensionPixelSize(resourceId)
-        }
-        val layoutParams = mParent.layoutParams
-        layoutParams.height = height
-        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-        mParent.layoutParams = layoutParams
-
-    }
 
     private fun initViews() {
         //初始化并发起权限申请
@@ -185,7 +170,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
     override fun getPermissions(): Array<String> {
         return arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )

@@ -1,13 +1,11 @@
 package com.savegoldmaster.utils.retrofit.factory;
 
 
-import android.util.Log;
+import com.google.gson.Gson;
 import com.savegoldmaster.base.BaseBean;
 import com.savegoldmaster.utils.ToastUtil;
 import com.savegoldmaster.utils.retrofit.UnicodeUtil;
-import com.google.gson.Gson;
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Converter;
 
 import java.io.IOException;
@@ -32,11 +30,12 @@ public class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> 
 
         String response = UnicodeUtil.decodeUnicode(value.string()).trim();
         BaseBean baseBean = gson.fromJson(response, BaseBean.class);
-        if (baseBean.getCode() == 100) {
+        if (baseBean.isSuccess()) {
         } else {
             ToastUtil.INSTANCE.showMessage(baseBean.getMessage());
         }
         return gson.fromJson(response, type);
+
 
         //先将返回的json数据解析到Response中，如果code==200，则解析到我们的实体基类中，否则抛异常
 //        HttpResult httpResult = gson.fromJson(response, HttpResult.class);

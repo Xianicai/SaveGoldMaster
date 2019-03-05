@@ -27,4 +27,8 @@ public class BaseBean {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public boolean isSuccess() {
+        return code == 100;
+    }
 }

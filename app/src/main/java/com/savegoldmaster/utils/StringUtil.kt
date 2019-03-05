@@ -5,11 +5,11 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.regex.Matcher
+import java.util.*
 import java.util.regex.Pattern
 
 object StringUtil {
+
     private val dateFormater = object : ThreadLocal<SimpleDateFormat>() {
         override fun initialValue(): SimpleDateFormat {
             return SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -22,6 +22,7 @@ object StringUtil {
         }
     }
 
+
     val PATTERN_URL =
         Pattern.compile("(http://|https://|www\\.)[^\\u4e00-\\u9fa5,^\\s,^\\[,^\\]]+|[^\\u4e00-\\u9fa5,^\\s,^\\[,^\\]]+(.com|.cn|.org|.info|.net|.gov|.edu)[^\\u4e00-\\u9fa5,^\\s,^\\[,^\\]]*")
 
@@ -29,6 +30,7 @@ object StringUtil {
      * @param time 毫秒
      * @return
      */
+
     fun convertTime(time: Long): String {
 
         //秒
@@ -533,9 +535,3 @@ object StringUtil {
         return list
     }
 }
-/**
- * 将数组用","拼接起来
- */
-/**
- * 判断str是否为空，为空则返回""；否则返回str
- */

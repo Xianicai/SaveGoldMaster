@@ -13,11 +13,14 @@ public class GoldPriceBean extends BaseBean {
     public void setContent(ContentBean content) {
         this.content = content;
     }
-
+    @Override
+    public boolean isSuccess() {
+        return getCode() == 100;
+    }
     public static class ContentBean {
 
-        private String goldPrice;
-        private double price;
+        private String goldPrice ="0.00";
+        private double price = 0.00;
         private String priceTime;
 
         public String getGoldPrice() {

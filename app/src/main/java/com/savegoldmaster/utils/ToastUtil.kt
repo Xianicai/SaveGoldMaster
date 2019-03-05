@@ -16,7 +16,8 @@ object ToastUtil {
 
     private val synObj = Any()
 
-    fun showMessage(msg: String) {
+    fun showMessage(msg: String?) {
+        msg ?: return
         showMessage(msg, Toast.LENGTH_SHORT)
     }
 

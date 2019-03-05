@@ -5,6 +5,9 @@ import com.savegoldmaster.base.BaseBean;
 public class LoginBean extends BaseBean {
     /**
      * content : {"token":"e36df360a3ea4aafb6405fa84f166b51","userId":"ff80808165f77df60165f9da906b003a"}
+     * <p>
+     * <p>
+     * code :1003 密码错误
      */
 
     private ContentBean content;
@@ -41,5 +44,10 @@ public class LoginBean extends BaseBean {
         public void setUserId(String userId) {
             this.userId = userId;
         }
+    }
+
+    @Override
+    public boolean isSuccess() {
+        return getCode() == -1005 || getCode() == 100 || getCode() == 1003;
     }
 }

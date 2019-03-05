@@ -1,8 +1,11 @@
 package com.savegoldmaster.utils.retrofit;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import com.savegoldmaster.base.BaseApplication;
-import com.savegoldmaster.common.Urls;
+import com.savegoldmaster.utils.ToastUtil;
 import com.savegoldmaster.utils.retrofit.factory.ResponseConverterFactory;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -18,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Requester {
     private static volatile Requester requester;
-    private final Retrofit mRetrofit;
+    private Retrofit mRetrofit;
 
     private Requester() {
         mRetrofit = new Retrofit.Builder()
@@ -27,6 +30,7 @@ public class Requester {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(getOkHttpClient())
                 .build();
+
     }
 
     public static Requester get() {
@@ -61,4 +65,7 @@ public class Requester {
         return httpClientBuilder.build();
 
     }
+
+
+
 }

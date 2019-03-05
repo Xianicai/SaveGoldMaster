@@ -17,7 +17,10 @@ public class RecyclerGoldBean extends BaseBean {
     public void setContent(ContentBean content) {
         this.content = content;
     }
-
+    @Override
+    public boolean isSuccess() {
+        return getCode() == 100;
+    }
     public static class ContentBean {
         /**
          * weight : 17167.192900000002

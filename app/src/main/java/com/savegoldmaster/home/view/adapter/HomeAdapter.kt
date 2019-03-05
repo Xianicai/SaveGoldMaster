@@ -18,11 +18,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import com.savegoldmaster.R
+import com.savegoldmaster.common.WebUrls
 import com.savegoldmaster.home.model.bean.*
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
 import com.savegoldmaster.utils.rxbus.RxEvent
-import kotlinx.android.synthetic.main.fragment_mine.*
+import com.savegoldmaster.utils.webutil.OutWebActivity
 import kotlinx.android.synthetic.main.layout_home_gold_price.view.*
 import kotlinx.android.synthetic.main.layout_home_nearby_shop.view.*
 import kotlinx.android.synthetic.main.layout_home_order_list.view.*
@@ -111,7 +112,7 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
                     }
                 }
             }
-            else -> {
+            HomeAdapter.TYPE_HOME_INFORMATION -> {
                 datas.forEach {
                     if (it is InformationBean) {
                         (holder as InfomationListViewHolder).buildInfomationList(it)
@@ -125,6 +126,7 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
         init {
             addEvent()
             itemView.mTvGoldTrend.setOnClickListener {
+                OutWebActivity.start(itemView.context, WebUrls.PRICE_TREND)
 
             }
             itemView.mTvRecycleGold.paint.isFakeBoldText = true
@@ -133,6 +135,8 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
 
         fun buildGoldPrice(contentBean: GoldPriceBean?) {
             val priceText = "${contentBean?.content?.goldPrice} 元/克"
+            itemView.mTvGoldPrice.isFocusable = false
+            itemView.mTvGoldPrice.isFocusableInTouchMode = false
             itemView.mTvGoldPrice.text = SpannableString(priceText).apply {
                 setSpan(RelativeSizeSpan(3.33f), 0, priceText.length - 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 setSpan(StyleSpan(Typeface.BOLD), 0, priceText.length - 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -155,7 +159,7 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
         fun buildOrderMsg(userOderBean: UserOderBean) {
             //我要卖金的点击事件
             itemView.mTvBuyGold.setOnClickListener {
-
+                OutWebActivity.start(itemView.context, WebUrls.STORE_GOLD)
             }
             val flipperViews = ArrayList<View>()
             for (i in 0 until userOderBean.content.size) {
@@ -174,6 +178,8 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
                 flipperViews.add(view)
             }
             itemView.pushUpFlipper.apply {
+                isFocusable = false
+                isFocusableInTouchMode = false
                 removeAllViews()
                 flipperViews.forEach {
                     addView(it)
@@ -214,7 +220,16 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
     }
 
     inner class ShopListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private var nearbyShopBean: NearbyShopBean? = null
+
+        init {
+            itemView.mShowMore.setOnClickListener {
+                OutWebActivity.start(itemView.context, WebUrls.SHOP_LIST)
+            }
+        }
+
         fun buildShopList(nearbyShopBean: NearbyShopBean) {
+            this.nearbyShopBean = nearbyShopBean
             itemView.mTvTitle.apply {
                 text = "附近店铺"
                 paint.isFakeBoldText = true
@@ -232,6 +247,12 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
     }
 
     inner class InfomationListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.mShowMore.setOnClickListener {
+                OutWebActivity.start(itemView.context, WebUrls.NEWS_LIST)
+            }
+        }
+
         fun buildInfomationList(informationBean: InformationBean) {
             itemView.mTvTitle.apply {
                 text = "黄金资讯"

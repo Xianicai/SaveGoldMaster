@@ -9,7 +9,7 @@ interface LoginContract {
         fun fasterLoginSuccess(loginBean: LoginBean)
         fun fasterLoginFail()
         fun accountLoginSuccess(loginBean: LoginBean)
-        fun accountLoginFail()
+        fun accountLoginFail(result: LoginBean?)
         fun getPhoneCode()
     }
 

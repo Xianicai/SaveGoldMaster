@@ -29,7 +29,7 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
     private var url: String? = null
     private var countDownTimer: CountDownTimer? = null
     private var imgResArr =
-        intArrayOf(R.mipmap.ic_360, R.mipmap.ic_bocuishan, R.mipmap.ic_lanchi, R.mipmap.ic_zhongxing)
+        intArrayOf(R.mipmap.pg_guide_one, R.mipmap.pg_guide_two, R.mipmap.pg_guide_there)
     private val viewList = ArrayList<View>()
     private val indicatorImgs = ArrayList<ImageView>()
     private var firstOpened: Boolean = false
@@ -78,6 +78,7 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
             SharedPreferencesHelper(this@SplashActivity, "AdBean").apply {
                 put("firstOpened", true)
             }
+            finshGuide.setOnClickListener(this)
             initGuideData()
             initViewPager()
         }
@@ -93,6 +94,10 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
             mImageAd -> {
                 if (StringUtil.isNotEmpty(url)) {
                 }
+            }
+            finshGuide ->{
+                MainActivity.start(this@SplashActivity)
+                finish()
             }
         }
     }

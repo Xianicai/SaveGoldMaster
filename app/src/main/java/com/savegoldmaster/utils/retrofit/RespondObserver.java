@@ -1,6 +1,5 @@
 package com.savegoldmaster.utils.retrofit;
 
-import android.util.Log;
 import com.elvishew.xlog.XLog;
 import com.savegoldmaster.base.BaseBean;
 import com.savegoldmaster.utils.ToastUtil;
@@ -22,7 +21,7 @@ public class RespondObserver<T extends BaseBean> implements Observer<T> {
 
     @Override
     public void onNext(T t) {
-        if (t.getCode() == 100) {
+        if (t.isSuccess()) {
             onSuccess(t);
         } else {
             onFailure(t);

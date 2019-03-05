@@ -19,7 +19,10 @@ public class InformationBean extends BaseBean {
     public void setContent(ContentBean content) {
         this.content = content;
     }
-
+    @Override
+    public boolean isSuccess() {
+        return getCode() == 100;
+    }
     public static class ContentBean {
 
         private boolean count;

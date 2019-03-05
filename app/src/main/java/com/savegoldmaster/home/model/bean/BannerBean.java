@@ -16,6 +16,11 @@ public class BannerBean extends BaseBean {
         this.content = content;
     }
 
+    @Override
+    public boolean isSuccess() {
+        return getCode() == 100;
+    }
+
     public static class ContentBean {
         /**
          * adStatus : 0

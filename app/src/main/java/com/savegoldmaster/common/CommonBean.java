@@ -17,4 +17,9 @@ public class CommonBean extends BaseBean  {
     public void setContent(String content) {
         this.content = content;
     }
+
+    @Override
+    public boolean isSuccess() {
+        return getCode() == 100;
+    }
 }

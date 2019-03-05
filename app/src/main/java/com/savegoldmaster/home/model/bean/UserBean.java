@@ -1,7 +1,6 @@
 package com.savegoldmaster.home.model.bean;
 
 import com.savegoldmaster.base.BaseBean;
-import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Index;
 
@@ -19,6 +18,10 @@ public class UserBean extends BaseBean {
 
     public void setContent(ContentBean content) {
         this.content = content;
+    }
+    @Override
+    public boolean isSuccess() {
+        return getCode() == 100;
     }
     public static class ContentBean {
         /**
@@ -56,6 +59,14 @@ public class UserBean extends BaseBean {
         private String goldMoneyStr;
         private int isHandheldIDphoto;
         private int realnamed;
+        private int isLoginPwd;
+
+        /**
+         * |是否绑定银行卡
+         * |整数
+         * |1是0否
+         * */
+        private int isBoundBankCard;
         private String telephone;
         @Index
         private String userName;
@@ -221,6 +232,22 @@ public class UserBean extends BaseBean {
 
         public void setRecycleOrderTBC(int recycleOrderTBC) {
             this.recycleOrderTBC = recycleOrderTBC;
+        }
+
+        public int getIsLoginPwd() {
+            return isLoginPwd;
+        }
+
+        public void setIsLoginPwd(int isLoginPwd) {
+            this.isLoginPwd = isLoginPwd;
+        }
+
+        public int getIsBoundBankCard() {
+            return isBoundBankCard;
+        }
+
+        public void setIsBoundBankCard(int isBoundBankCard) {
+            this.isBoundBankCard = isBoundBankCard;
         }
     }
 }

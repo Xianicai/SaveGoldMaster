@@ -91,7 +91,7 @@ class BorderView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
             strokeWidth = typedArray.getDimension(R.styleable.BorderView_borderViewStrokeWidth, dp2px(1f))
             strokeHalfWidth = strokeWidth / 2
         }
-        radius = typedArray.getDimension(R.styleable.BorderView_borderViewRadius, dp2px(13f))
+        radius = typedArray.getDimension(R.styleable.BorderView_borderViewRadius, dp2px(20f))
         strokePadding = typedArray.getDimension(R.styleable.BorderView_borderViewStrokePadding, 0f)
         mBackgroundColor = typedArray.getColor(R.styleable.BorderView_borderViewBackgroundColor, 0)
         rounded = typedArray.getBoolean(R.styleable.BorderView_borderViewRounded, false)

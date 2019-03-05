@@ -1,7 +1,11 @@
 package com.savegoldmaster.utils.retrofit;
 
-import android.util.Log;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import com.elvishew.xlog.XLog;
+import com.savegoldmaster.base.BaseApplication;
+import com.savegoldmaster.utils.ToastUtil;
 import okhttp3.*;
 import okio.Buffer;
 import okio.BufferedSource;
@@ -19,6 +23,8 @@ public class LoggerInterceptor implements Interceptor {
 
     @Override
     public Response intercept(Chain chain) throws IOException {
+        //判断是否有网
+        isNetworkAvailable();
         Request request = chain.request();
         //开始请求
         printRequestMessage(request);
@@ -97,5 +103,23 @@ public class LoggerInterceptor implements Interceptor {
         }
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) BaseApplication.Companion.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo == null) {
+            ToastUtil.INSTANCE.showMessage("您的网络不太顺畅哦~");
+            return false;
+        }
 
+        if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            return true;
+        }
+
+        if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+            return true;
+        }
+        ToastUtil.INSTANCE.showMessage("您的网络不太顺畅哦~");
+        return false;
+
+    }
 }

@@ -73,12 +73,15 @@
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <ImageView android:layout_width="wrap_content"
+        <ImageView
+                android:id="@+id/mImageZhongxing"
+                android:layout_width="wrap_content"
                    android:layout_weight="1"
                    android:background="@color/white"
                    android:layout_height="50dp"
                    android:src="@mipmap/ic_zhongxing"/>
         <ImageView
+                android:id="@+id/mImageZhonghenglong"
                 android:layout_height="50dp"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
@@ -86,6 +89,7 @@
                 android:background="@color/white"
                 android:src="@mipmap/ic_zhonghenglong"/>
         <ImageView
+                android:id="@+id/mImageLanchi"
                 android:layout_height="50dp"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
@@ -97,7 +101,9 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <ImageView android:layout_width="wrap_content"
+        <ImageView
+                android:id="@+id/mImageYuanyi"
+                android:layout_width="wrap_content"
                    android:layout_weight="1"
                    android:background="@color/white"
                    android:layout_height="50dp"

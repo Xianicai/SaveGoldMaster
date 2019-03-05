@@ -13,19 +13,22 @@ import com.savegoldmaster.R
 import com.savegoldmaster.account.LoginActivity
 import com.savegoldmaster.account.UserUtil
 import com.savegoldmaster.base.view.BaseMVPFragment
-import com.savegoldmaster.common.Urls
+import com.savegoldmaster.common.WebUrls
 import com.savegoldmaster.home.model.bean.*
 import com.savegoldmaster.home.presenter.Contract.HomeContract
 import com.savegoldmaster.home.presenter.HomePresenterImpl
 import com.savegoldmaster.home.view.adapter.HomeAdapter
-import com.savegoldmaster.utils.*
+import com.savegoldmaster.utils.DateTimeUtil
+import com.savegoldmaster.utils.LocationUtils
+import com.savegoldmaster.utils.StringUtil
 import com.savegoldmaster.utils.glide.GlideImageView
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
 import com.savegoldmaster.utils.rxbus.RxEvent
+import com.savegoldmaster.utils.webutil.OutWebActivity
 import kotlinx.android.synthetic.main.fragment_home.*
-import retrofit2.http.Url
-import kotlin.collections.ArrayList
+import kotlinx.android.synthetic.main.layout_home_company_info.*
+import kotlinx.android.synthetic.main.layout_home_company_info.view.*
 
 class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView, View.OnClickListener {
 
@@ -40,6 +43,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     private var homePresenterImpl: HomePresenterImpl? = null
     private var homeAdapter: HomeAdapter? = null
     private var start: CountDownTimer? = null
+    private var noticeBean: NoticeBean? = null
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_home
@@ -50,16 +54,21 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         mImageMsg.setOnClickListener(this)
         mImageClose.setOnClickListener(this)
         mImageMsgV2.setOnClickListener(this)
+        mLayoutNotice.setOnClickListener(this)
         listBean = ArrayList()
         mRecyclerView.isNestedScrollingEnabled = false
         mRecyclerView.layoutManager = LinearLayoutManager(context)
         homeAdapter = HomeAdapter(listBean!!)
         mRecyclerView.adapter = homeAdapter
-        mRecyclerView.addFooterView(
-            layoutInflater.inflate(
-                R.layout.layout_home_company_info, mRecyclerView.parent as ViewGroup, false
-            )
+        val bottomView = layoutInflater.inflate(
+            R.layout.layout_home_company_info, mRecyclerView.parent as ViewGroup, false
         )
+        mRecyclerView.addFooterView(
+            bottomView
+        )
+        (bottomView.mLayoutKnowOur).setOnClickListener(this)
+        (bottomView.mLayoutSafety).setOnClickListener(this)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mScrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
                 if (px2dp(context!!, scrollY) > 48) {
@@ -72,7 +81,10 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         initData()
     }
 
+
+
     private fun initData() {
+        listBean.clear()
         listBean.add(GoldPriceBean() as Object)
         homePresenterImpl?.getBanner(1, 5, 2)
         if (UserUtil.isLogin()) {
@@ -102,10 +114,20 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
             }
             mImageMsgV2, mImageMsg -> {
                 if (UserUtil.isLogin()) {
-                    OutWebActivity.start(context!!, "${Urls.BASE_URL}messagelist")
+                    OutWebActivity.start(context!!, WebUrls.MESSAGE_LIST)
                 } else {
                     LoginActivity.start(context!!)
                 }
+            }
+            mLayoutNotice -> {
+                OutWebActivity.start(context!!, WebUrls.MESSAGE_DETAIL + noticeBean?.content?.id)
+            }
+            mLayoutKnowOur ->{
+                OutWebActivity.start(context!!, WebUrls.UNDERSTAND )
+
+            }
+            mLayoutSafety ->{
+                OutWebActivity.start(context!!, WebUrls.SECURITY )
             }
         }
 
@@ -116,6 +138,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     }
 
     override fun getNotice(noticeBean: NoticeBean) {
+        this.noticeBean = noticeBean
         if (StringUtil.isNotEmpty(noticeBean.content.title)) {
             mLayoutNotice.visibility = View.VISIBLE
             buildNotice(noticeBean.content)
@@ -142,7 +165,6 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         }
         RxBus.getDefault().post(RxEvent(EventConstant.NOTIF_GOLD_PRICE,goldPriceBean))
 
-//        homeAdapter?.notifyItemChanged(HomeAdapter.TYPE_HOME_GOLD_PRICE)
         countDownTime()
     }
 
