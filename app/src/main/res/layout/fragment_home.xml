@@ -2,8 +2,9 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
+        android:background="@color/common_background"
         android:layout_height="match_parent">
-    <ScrollView
+    <com.savegoldmaster.utils.view.ResetScrollView
             android:layout_width="match_parent"
             android:id="@+id/mScrollView"
             android:layout_alignParentTop="true"
@@ -14,6 +15,7 @@
 
             <LinearLayout android:layout_width="match_parent"
                           android:layout_height="wrap_content"
+                          android:descendantFocusability="blocksDescendants"
                           android:orientation="vertical">
                 <com.stx.xhb.xbanner.XBanner
                         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -73,6 +75,7 @@
                 <com.example.zhanglibin.bdmoe.recyclerview.WrapRecyclerView
                         android:id="@+id/mRecyclerView"
                         android:layout_width="match_parent"
+                        android:overScrollMode="never"
                         android:layout_height="wrap_content"/>
             </LinearLayout>
             <ImageView
@@ -95,7 +98,7 @@
                     android:visibility="gone"
                     android:layout_marginRight="17dp"/>
         </RelativeLayout>
-    </ScrollView>
+    </com.savegoldmaster.utils.view.ResetScrollView>
     <RelativeLayout
             android:id="@+id/mLayoutTopTab"
             android:layout_alignParentTop="true"

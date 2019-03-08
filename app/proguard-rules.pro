@@ -35,3 +35,7 @@
 
 -dontwarn cn.jiguang.**
 -keep class cn.jiguang.** { *; }
+#网页调原生相机  混淆
+-keepclassmembers class * extends android.webkit.WebChromeClient{
+public void openFileChooser(…);
+}

@@ -1,10 +1,9 @@
 package com.savegoldmaster.home.view.adapter
 
 import android.content.Context
-import com.example.zhanglibin.bdmoe.adapter.CommonRecyclerAdapter
-import com.example.zhanglibin.bdmoe.adapter.MultiTypeSupport
-import com.example.zhanglibin.bdmoe.adapter.ViewHolder
 import com.savegoldmaster.R
+import com.savegoldmaster.utils.adapter.CommonRecyclerAdapter
+import com.savegoldmaster.utils.adapter.ViewHolder
 import kotlinx.android.synthetic.main.mine_list_item.view.*
 
 class MineListAdapter(context: Context, datas: ArrayList<MineListBean>) :

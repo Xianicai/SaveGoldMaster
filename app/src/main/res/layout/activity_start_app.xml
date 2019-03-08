@@ -18,6 +18,7 @@
             android:id="@+id/mImageAd"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="fitXY"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="95dp"
             android:layout_alignParentBottom="true"

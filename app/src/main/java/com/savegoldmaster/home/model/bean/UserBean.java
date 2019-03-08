@@ -19,10 +19,12 @@ public class UserBean extends BaseBean {
     public void setContent(ContentBean content) {
         this.content = content;
     }
+
     @Override
     public boolean isSuccess() {
-        return getCode() == 100;
+        return getCode() == 100 || getCode() == 401;
     }
+
     public static class ContentBean {
         /**
          * cashBalance : 0.0
@@ -65,7 +67,7 @@ public class UserBean extends BaseBean {
          * |是否绑定银行卡
          * |整数
          * |1是0否
-         * */
+         */
         private int isBoundBankCard;
         private String telephone;
         @Index

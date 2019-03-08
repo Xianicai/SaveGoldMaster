@@ -39,8 +39,11 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
     companion object {
         var ACCOUNT_LOGIN = 1
         var FASTER_LOGIN = 2
-        fun start(context: Context) {
-            context.startActivity(Intent(context, LoginActivity::class.java))
+        fun start(context: Context, url: String) {
+            context.startActivity(
+                Intent(context, LoginActivity::class.java)
+                    .putExtra("URL", url)
+            )
         }
     }
 
@@ -50,6 +53,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
     private var countDownTimer: CountDownTimer? = null
     private var loginBean: LoginBean? = null
     private var forgetPasw = 0
+    private var url = ""
     override fun getLayoutId(): Int {
         return R.layout.activity_login
     }
@@ -58,6 +62,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         super.initWindow()
         setTheme(R.style.TranslucentTheme)
         setWindowStatusBarColors(this)
+        url = intent.getStringExtra("URL")
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
@@ -217,7 +222,11 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         }
         ToastUtil.showMessage("登录成功")
         RxBus.getDefault().post(RxEvent(EventConstant.USER_LOGIN, loginType))
+        if (url.isNotEmpty()) {
+            OutWebActivity.start(this, "$url?type=1001")
+        }
         finish()
+
     }
 
     private fun changeLoginStatus(textView: TextView?, v: View?, loginType: Int) {

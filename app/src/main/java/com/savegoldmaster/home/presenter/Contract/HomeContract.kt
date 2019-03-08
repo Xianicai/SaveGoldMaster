@@ -7,6 +7,7 @@ interface HomeContract {
 
     interface HomeView : BaseView {
         fun getBannerData(bean: BannerBean)
+        fun getPushNotice(bean: BannerBean)
         fun getRecycleGold(recyclerGoldBean: RecyclerGoldBean)
         fun getGoldPrice(goldPriceBean: GoldPriceBean)
         fun getNewInformation(informationBean: InformationBean)
@@ -16,6 +17,7 @@ interface HomeContract {
 
     }
     interface HomePresenter {
+        fun getPushNotice(position: Int, number: Int, isIOS: Int)
         fun getBanner(position: Int, number: Int, isIOS: Int)
         fun getRecycleGold()
         fun getGoldPrice()

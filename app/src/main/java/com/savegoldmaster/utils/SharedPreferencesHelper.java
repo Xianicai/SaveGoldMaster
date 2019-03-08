@@ -12,6 +12,9 @@ public class SharedPreferencesHelper {
      */private SharedPreferences.Editor editor;
 
     public SharedPreferencesHelper(Context context, String FILE_NAME) {
+        if (context == null) {
+            return;
+        }
         sharedPreferences = context.getSharedPreferences(FILE_NAME,
                 Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();

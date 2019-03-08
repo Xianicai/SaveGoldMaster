@@ -2,7 +2,6 @@ package com.savegoldmaster.home.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.os.CountDownTimer
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -26,6 +25,7 @@ import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
 import com.savegoldmaster.utils.rxbus.RxEvent
 import com.savegoldmaster.utils.webutil.OutWebActivity
+import com.savegoldmaster.utils.webutil.PushDialog
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.layout_home_company_info.*
 import kotlinx.android.synthetic.main.layout_home_company_info.view.*
@@ -68,24 +68,23 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         )
         (bottomView.mLayoutKnowOur).setOnClickListener(this)
         (bottomView.mLayoutSafety).setOnClickListener(this)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mScrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-                if (px2dp(context!!, scrollY) > 48) {
-                    mLayoutTopTab.visibility = View.VISIBLE
-                } else {
-                    mLayoutTopTab.visibility = View.GONE
-                }
+        mScrollView.setOnScrollListener { scrollY ->
+            if (px2dp(context!!, scrollY) > 48) {
+                mLayoutTopTab.visibility = View.VISIBLE
+            } else {
+                mLayoutTopTab.visibility = View.GONE
             }
         }
         initData()
     }
 
 
-
     private fun initData() {
         listBean.clear()
         listBean.add(GoldPriceBean() as Object)
+        //获取首页站内推送
+        homePresenterImpl?.getPushNotice(2, 1, 2)
+        //获取轮播图
         homePresenterImpl?.getBanner(1, 5, 2)
         if (UserUtil.isLogin()) {
             homePresenterImpl?.getNotice()
@@ -116,18 +115,18 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
                 if (UserUtil.isLogin()) {
                     OutWebActivity.start(context!!, WebUrls.MESSAGE_LIST)
                 } else {
-                    LoginActivity.start(context!!)
+                    LoginActivity.start(context!!, "")
                 }
             }
             mLayoutNotice -> {
                 OutWebActivity.start(context!!, WebUrls.MESSAGE_DETAIL + noticeBean?.content?.id)
             }
-            mLayoutKnowOur ->{
-                OutWebActivity.start(context!!, WebUrls.UNDERSTAND )
+            mLayoutKnowOur -> {
+                OutWebActivity.start(context!!, WebUrls.UNDERSTAND)
 
             }
-            mLayoutSafety ->{
-                OutWebActivity.start(context!!, WebUrls.SECURITY )
+            mLayoutSafety -> {
+                OutWebActivity.start(context!!, WebUrls.SECURITY)
             }
         }
 
@@ -150,7 +149,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         if (noticeBean.content.count > 0) {
             mImageUnreadV2.visibility = View.VISIBLE
             mImageUnread.visibility = View.VISIBLE
-            RxBus.getDefault().post(RxEvent(EventConstant.MINE_FRAGMENT_MSG,noticeBean.content.count))
+            RxBus.getDefault().post(RxEvent(EventConstant.MINE_FRAGMENT_MSG, noticeBean.content.count))
         } else {
             mImageUnreadV2.visibility = View.GONE
             mImageUnread.visibility = View.GONE
@@ -163,7 +162,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
                 listBean[i] = goldPriceBean as Object
             }
         }
-        RxBus.getDefault().post(RxEvent(EventConstant.NOTIF_GOLD_PRICE,goldPriceBean))
+        RxBus.getDefault().post(RxEvent(EventConstant.NOTIF_GOLD_PRICE, goldPriceBean))
 
         countDownTime()
     }
@@ -218,6 +217,12 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
             }
         }
 
+    }
+
+    override fun getPushNotice(bean: BannerBean) {
+        if (bean.content[0]?.imgUrl?.isNotEmpty() == true) {
+            PushDialog(activity).setDate(bean).show()
+        }
     }
 
     private fun countDownTime() {

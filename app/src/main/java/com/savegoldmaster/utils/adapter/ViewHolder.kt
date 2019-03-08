@@ -1,4 +1,4 @@
-package com.example.zhanglibin.bdmoe.adapter
+package com.savegoldmaster.utils.adapter
 
 import android.content.Context
 import android.graphics.Bitmap

@@ -1,11 +1,9 @@
-package com.example.zhanglibin.bdmoe.adapter
+package com.savegoldmaster.utils.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.savegoldmaster.utils.adapter.OnItemClickListener
-import com.savegoldmaster.utils.adapter.OnItemLongClickListener
 
 
 abstract class CommonRecyclerAdapter<T>(

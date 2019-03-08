@@ -7,6 +7,7 @@ interface UserContract {
 
     interface UserView : BaseView {
         fun getUserDetail(userBean: UserBean)
+        fun getUserDetailFailure(userBean: UserBean)
     }
 
     interface UserPresenter {

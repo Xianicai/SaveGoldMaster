@@ -1,4 +1,4 @@
-package com.example.zhanglibin.bdmoe.adapter
+package com.savegoldmaster.utils.adapter
 
 interface MultiTypeSupport<T> {
     // 根据当前位置或者条目数据返回布局

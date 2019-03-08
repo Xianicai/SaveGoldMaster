@@ -1,11 +1,11 @@
 package com.savegoldmaster.home.view.adapter
 
 import android.content.Context
-import com.example.zhanglibin.bdmoe.adapter.CommonRecyclerAdapter
-import com.example.zhanglibin.bdmoe.adapter.ViewHolder
 import com.savegoldmaster.R
 import com.savegoldmaster.common.WebUrls
 import com.savegoldmaster.home.model.bean.NearbyShopBean
+import com.savegoldmaster.utils.adapter.CommonRecyclerAdapter
+import com.savegoldmaster.utils.adapter.ViewHolder
 import com.savegoldmaster.utils.webutil.OutWebActivity
 import kotlinx.android.synthetic.main.home_nearby_shop_item.view.*
 

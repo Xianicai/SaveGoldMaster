@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,10 +21,12 @@ import android.view.*;
 import android.webkit.*;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.gson.Gson;
 import com.savegoldmaster.R;
 import com.savegoldmaster.account.LoginActivity;
 import com.savegoldmaster.base.BaseApplication;
 import com.savegoldmaster.utils.LoadingDialog;
+import com.savegoldmaster.utils.LocationUtils;
 import com.savegoldmaster.utils.SharedPreferencesHelper;
 import com.savegoldmaster.utils.rxbus.EventConstant;
 import com.savegoldmaster.utils.rxbus.RxBus;
@@ -81,6 +84,7 @@ public class OutWebActivity extends AppCompatActivity {
         mWebSettings.setDomStorageEnabled(true);
         mWebSettings.setBuiltInZoomControls(true);
         mWebSettings.setDatabaseEnabled(true);
+        mWebSettings.setGeolocationEnabled(true);
         mWebSettings.setAppCacheMaxSize(1024 * 1024 * 8);
         String appCachePath = getApplicationContext().getCacheDir().getAbsolutePath();
         mWebSettings.setAppCachePath(appCachePath);
@@ -123,7 +127,16 @@ public class OutWebActivity extends AppCompatActivity {
             }
         });
 
+        mWebview.setWebChromeClient(new WebChromeClient() {
+            //配置权限（同样在WebChromeClient中实现）
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin,
+                                                           GeolocationPermissions.Callback callback) {
+                callback.invoke(origin, true, false);
+                super.onGeolocationPermissionsShowPrompt(origin, callback);
+            }
 
+        });
         //设置WebViewClient类
         mWebview.setWebViewClient(new WebViewClient() {
             //设置加载前的函数
@@ -230,6 +243,7 @@ public class OutWebActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void closeOutWeb() {
+            RxBus.getDefault().post(new RxEvent(EventConstant.USER_LOGIN, LoginActivity.Companion.getACCOUNT_LOGIN()));
             finish();
         }
 
@@ -238,42 +252,45 @@ public class OutWebActivity extends AppCompatActivity {
             startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + telephone)).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         }
 
-        @JavascriptInterface
-        public void toApplogin() {
-            LoginActivity.Companion.start(OutWebActivity.this);
-            finish();
-        }
 
         @JavascriptInterface
         public void logout() {
             RxBus.getDefault().post(new RxEvent(EventConstant.OUT_LOGIN, ""));
-            SharedPreferencesHelper helper = new SharedPreferencesHelper(OutWebActivity.this, "UserBean");
-            helper.clear();
             finish();
         }
 
         @JavascriptInterface
-        public void getPhonePer(String phoneNumber) {
-            //用intent启动拨打电话
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(OutWebActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(OutWebActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
-                        Toast.makeText(OutWebActivity.this, "请在应用权限管理中打开“电话”访问权限！", Toast.LENGTH_LONG).show();
-                    } else {
-                        ActivityCompat.requestPermissions(OutWebActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 200);
-                    }
-                } else {
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:" + phoneNumber));
-                    callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    OutWebActivity.this.startActivity(callIntent);
-                }
-            } else {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + phoneNumber));
-                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                OutWebActivity.this.startActivity(callIntent);
+        public String getLocation() {
+            Location location = LocationUtils.getInstance(OutWebActivity.this).showLocation();
+            return new Gson().toJson(location);
+        }
+
+        @JavascriptInterface
+        public void toNative(int type, String url) {
+            switch (type) {
+                case 1001:
+                    LoginActivity.Companion.start(OutWebActivity.this, url);
+                    break;
+                case 1002:
+                    RxBus.getDefault().post(new RxEvent(EventConstant.USER_LOGIN, LoginActivity.Companion.getACCOUNT_LOGIN()));
+                    break;
+
             }
+
+        }
+
+        @JavascriptInterface
+        public String backPerInfo() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(OutWebActivity.this, Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(OutWebActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    return "OK";
+                } else {
+                    return "NO";
+                }
+            }
+            return "OK";
         }
 
         @JavascriptInterface

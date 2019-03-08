@@ -32,6 +32,8 @@ import io.objectbox.Box
 import kotlinx.android.synthetic.main.fragment_mine.*
 
 class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView, View.OnClickListener {
+
+
     companion object {
         fun newInstance(): MineFragment {
             return MineFragment()
@@ -72,6 +74,12 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
         mTvBalance.setOnClickListener(this)
         initRecyclerView()
 //        mBox = BaseApplication.boxStore?.boxFor(UserBean::class.java)
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
         if (userId.isEmpty()) {
             mLayoutLogin.visibility = View.VISIBLE
             mImageLogin.visibility = View.VISIBLE
@@ -79,7 +87,6 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
         } else {
             initData()
         }
-
     }
 
     private fun initRecyclerView() {
@@ -93,7 +100,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
             setOnItemClickListener(object : OnItemClickListener {
                 override fun onItemClick(position: Int) {
                     if (!UserUtil.isLogin()) {
-                        LoginActivity.start(context!!)
+                        LoginActivity.start(context!!, "")
                     } else {
                         when (position) {
                             0 -> {
@@ -144,7 +151,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
     override fun onClick(v: View?) {
         when (v) {
             mButtonLogin -> {
-                LoginActivity.start(activity!!)
+                LoginActivity.start(activity!!, "")
             }
             mTvServiceTel -> {
                 startActivity(
@@ -157,14 +164,14 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
             mLayoutRecycleOrder -> {
                 //回收订单
                 if (!UserUtil.isLogin()) {
-                    LoginActivity.start(context!!)
+                    LoginActivity.start(context!!, "")
                     return@onClick
                 }
                 OutWebActivity.start(context!!, WebUrls.STORE_ORDER_LIST)
             }
             mTvSetName -> {
                 if (!UserUtil.isLogin()) {
-                    LoginActivity.start(context!!)
+                    LoginActivity.start(context!!, "")
                     return@onClick
                 }
                 //实名认证
@@ -175,12 +182,12 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
                 if (UserUtil.isLogin()) {
                     OutWebActivity.start(context!!, WebUrls.MESSAGE_LIST)
                 } else {
-                    LoginActivity.start(context!!)
+                    LoginActivity.start(context!!, "")
                 }
             }
             mTvTopUp -> {
                 if (!UserUtil.isLogin()) {
-                    LoginActivity.start(context!!)
+                    LoginActivity.start(context!!, "")
                     return
                 }
                 if (userBean?.content?.isBoundBankCard == 0) {
@@ -192,7 +199,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
             }
             mTvWithdrawal -> {
                 if (!UserUtil.isLogin()) {
-                    LoginActivity.start(context!!)
+                    LoginActivity.start(context!!, "")
                     return
                 }
                 if (userBean?.content?.isBoundBankCard == 0) {
@@ -203,24 +210,24 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
             }
             mTvSetName -> {
                 if (!UserUtil.isLogin()) {
-                    LoginActivity.start(context!!)
+                    LoginActivity.start(context!!, "")
                     return
                 }
                 OutWebActivity.start(context!!, WebUrls.AUTHBANK)
             }
             mImageHead -> {
                 if (!UserUtil.isLogin()) {
-                    LoginActivity.start(context!!)
+                    LoginActivity.start(context!!, "")
                     return
                 }
                 OutWebActivity.start(context!!, WebUrls.MINE)
             }
             mTvBalance -> {
                 if (!UserUtil.isLogin()) {
-                    LoginActivity.start(context!!)
+                    LoginActivity.start(context!!, "")
                     return
                 }
-                    OutWebActivity.start(context!!, WebUrls.ACCOUNT)
+                OutWebActivity.start(context!!, WebUrls.ACCOUNT)
             }
         }
     }
@@ -261,6 +268,8 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }
+        }else{
+            mTvOrder.visibility = View.GONE
         }
         mTvBalance.text = userBean.content.cashBalanceStr
         if (userBean.content.isLoginPwd == 0 && loginType == LoginActivity.FASTER_LOGIN) {
@@ -275,19 +284,17 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
                 when {
                     t?.eventType == EventConstant.MINE_FRAGMENT_MSG -> {
                         if (t.`object` as Int > 0) {
-                            mImageUnread?:return@subscribe
+                            mImageUnread ?: return@subscribe
                             mImageUnread.visibility = View.VISIBLE
                         } else {
-                            mImageUnread?:return@subscribe
+                            mImageUnread ?: return@subscribe
                             mImageUnread.visibility = View.GONE
                         }
                         initData()
                     }
                     t?.eventType == EventConstant.OUT_LOGIN -> (context as Activity).runOnUiThread(object : Runnable {
                         override fun run() {
-                            initView(null)
-                            mTvBalance.text = "0.0"
-                            mTvOrder.visibility = View.GONE
+                            outLogin()
                         }
                     })
                     t?.eventType == EventConstant.USER_LOGIN -> {
@@ -300,6 +307,16 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
                     }
                 }
             }
+    }
+
+    private fun outLogin() {
+        val helper = SharedPreferencesHelper(activity, "UserBean")
+        helper.clear()
+        mLayoutLogin.visibility = View.VISIBLE
+        mImageLogin.visibility = View.VISIBLE
+        mLayoutUserView.visibility = View.GONE
+        mTvBalance.text = "0.0"
+        mTvOrder.visibility = View.GONE
     }
 
 
@@ -333,5 +350,9 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
                     })
             dialog?.show()
         }
+    }
+
+    override fun getUserDetailFailure(userBean: UserBean) {
+        outLogin()
     }
 }

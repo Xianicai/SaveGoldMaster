@@ -1,6 +1,5 @@
 package com.savegoldmaster.home.presenter
 
-import com.savegoldmaster.base.BaseBean
 import com.savegoldmaster.base.presenter.BasePresenterImpl
 import com.savegoldmaster.home.model.bean.UserBean
 import com.savegoldmaster.home.model.impl.UserModelImpl
@@ -18,7 +17,11 @@ class UserPresenterImpl : BasePresenterImpl<UserContract.UserView>(), UserContra
             .subscribe(object :RespondObserver<UserBean>(){
                 override fun onSuccess(result: UserBean?) {
                     super.onSuccess(result)
-                    mView?.getUserDetail(result!!)
+                    if (result?.code == 401){
+                       mView?.getUserDetailFailure(result!!)
+                    }else {
+                        mView?.getUserDetail(result!!)
+                    }
                 }
             })
     }
