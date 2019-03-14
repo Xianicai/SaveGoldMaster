@@ -20,6 +20,7 @@ import android.view.animation.AnimationUtils
 import com.savegoldmaster.R
 import com.savegoldmaster.common.WebUrls
 import com.savegoldmaster.home.model.bean.*
+import com.savegoldmaster.utils.LocationUtils
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
 import com.savegoldmaster.utils.rxbus.RxEvent
@@ -224,7 +225,8 @@ class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<R
 
         init {
             itemView.mShowMore.setOnClickListener {
-                OutWebActivity.start(itemView.context, WebUrls.SHOP_LIST)
+                val location = LocationUtils.getInstance(itemView.context).showLocation()
+                OutWebActivity.start(itemView.context, WebUrls.SHOP_LIST+"?lat="+location?.latitude+"&lng="+location?.longitude)
             }
         }
 

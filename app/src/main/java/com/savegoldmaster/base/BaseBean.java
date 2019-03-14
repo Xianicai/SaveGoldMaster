@@ -29,6 +29,6 @@ public class BaseBean {
     }
 
     public boolean isSuccess() {
-        return code == 100;
+        return code == 100||code==1003;
     }
 }

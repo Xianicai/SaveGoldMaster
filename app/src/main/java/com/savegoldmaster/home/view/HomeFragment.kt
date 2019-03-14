@@ -1,6 +1,7 @@
 package com.savegoldmaster.home.view
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.os.CountDownTimer
 import android.support.v7.widget.LinearLayoutManager
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.elvishew.xlog.XLog
 import com.savegoldmaster.R
 import com.savegoldmaster.account.LoginActivity
 import com.savegoldmaster.account.UserUtil
@@ -24,8 +26,8 @@ import com.savegoldmaster.utils.glide.GlideImageView
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
 import com.savegoldmaster.utils.rxbus.RxEvent
+import com.savegoldmaster.utils.view.PushDialog
 import com.savegoldmaster.utils.webutil.OutWebActivity
-import com.savegoldmaster.utils.webutil.PushDialog
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.layout_home_company_info.*
 import kotlinx.android.synthetic.main.layout_home_company_info.view.*
@@ -75,15 +77,25 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
                 mLayoutTopTab.visibility = View.GONE
             }
         }
+        //获取首页站内推送
+        homePresenterImpl?.getPushNotice(2, 1, 2)
         initData()
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if (UserUtil.isLogin()) {
+                XLog.d("请求消息列表了")
+                homePresenterImpl?.getNotice()
+            }
+        }
+    }
 
     private fun initData() {
         listBean.clear()
+        homeAdapter?.notifyDataSetChanged()
         listBean.add(GoldPriceBean() as Object)
-        //获取首页站内推送
-        homePresenterImpl?.getPushNotice(2, 1, 2)
         //获取轮播图
         homePresenterImpl?.getBanner(1, 5, 2)
         if (UserUtil.isLogin()) {
@@ -113,6 +125,8 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
             }
             mImageMsgV2, mImageMsg -> {
                 if (UserUtil.isLogin()) {
+                    mImageUnreadV2.visibility = View.GONE
+                    mImageUnread.visibility = View.GONE
                     OutWebActivity.start(context!!, WebUrls.MESSAGE_LIST)
                 } else {
                     LoginActivity.start(context!!, "")
@@ -163,7 +177,6 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
             }
         }
         RxBus.getDefault().post(RxEvent(EventConstant.NOTIF_GOLD_PRICE, goldPriceBean))
-
         countDownTime()
     }
 
@@ -220,7 +233,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     }
 
     override fun getPushNotice(bean: BannerBean) {
-        if (bean.content[0]?.imgUrl?.isNotEmpty() == true) {
+        if (bean.content.isNotEmpty() && bean.content.size > 0 && bean.content[0]?.imgUrl?.isNotEmpty() == true) {
             PushDialog(activity).setDate(bean).show()
         }
     }
@@ -266,8 +279,16 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     private fun addEvent() {
         RxBus.getDefault().toObservable(RxEvent::class.java)
             .subscribe { t ->
-                if (t?.eventType == EventConstant.USER_LOGIN) {
+                when {t?.eventType == EventConstant.USER_LOGIN -> {
                     initData()
+                }
+                    t?.eventType == EventConstant.OUT_LOGIN -> (context as Activity).runOnUiThread(object : Runnable {
+                        override fun run() {
+                            mLayoutNotice.visibility = View.GONE
+                            mImageUnreadV2.visibility = View.GONE
+                            mImageUnread.visibility = View.GONE
+                        }
+                    })
                 }
             }
     }

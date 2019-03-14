@@ -1,4 +1,4 @@
-package com.example.zhanglibin.bdmoe.recyclerview
+package com.savegoldmaster.utils.adapter
 
 import android.animation.ObjectAnimator
 import android.content.Context

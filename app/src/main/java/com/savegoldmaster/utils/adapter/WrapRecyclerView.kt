@@ -1,4 +1,5 @@
-package com.example.zhanglibin.bdmoe.recyclerview
+package com.savegoldmaster.utils.adapter
+
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView

@@ -83,7 +83,9 @@ class HomePresenterImpl : BasePresenterImpl<HomeContract.HomeView>(), HomeContra
             .subscribe(object : RespondObserver<NoticeBean>() {
                 override fun onSuccess(result: NoticeBean?) {
                     super.onSuccess(result)
-                    mView?.getNotice(result!!)
+                    if (result?.code == 100){
+                        mView?.getNotice(result)
+                    }
                 }
             })
     }

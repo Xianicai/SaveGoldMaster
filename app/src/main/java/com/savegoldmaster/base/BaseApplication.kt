@@ -1,20 +1,12 @@
 package com.savegoldmaster.base
 
 import android.app.Application
-import android.content.Context
-import android.webkit.DownloadListener
 import cn.jpush.android.api.JPushInterface
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
-import com.tencent.bugly.Bugly
-import com.tencent.bugly.beta.Beta
+import com.savegoldmaster.utils.view.BuglyUtils
 import io.objectbox.BoxStore
-import com.savegoldmaster.home.view.MainActivity
-import com.savegoldmaster.utils.SharedPreferencesHelper
-import com.tencent.bugly.beta.download.DownloadTask
-import com.tencent.bugly.crashreport.CrashReport
-import com.savegoldmaster.utils.BuglyUtils
 
 
 /**

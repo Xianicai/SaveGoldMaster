@@ -19,18 +19,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
 import android.webkit.*;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
 import com.savegoldmaster.R;
 import com.savegoldmaster.account.LoginActivity;
 import com.savegoldmaster.base.BaseApplication;
-import com.savegoldmaster.utils.LoadingDialog;
 import com.savegoldmaster.utils.LocationUtils;
 import com.savegoldmaster.utils.SharedPreferencesHelper;
 import com.savegoldmaster.utils.rxbus.EventConstant;
 import com.savegoldmaster.utils.rxbus.RxBus;
 import com.savegoldmaster.utils.rxbus.RxEvent;
+import com.savegoldmaster.utils.view.LoadingDialog;
 
 import java.io.File;
 
@@ -47,6 +49,7 @@ public class OutWebActivity extends AppCompatActivity {
     TextView beginLoading, endLoading, loading, mtitle;
     private static final String APP_CACAHE_DIRNAME = "/webcache";
     private LoadingDialog dialog;
+    private ProgressBar progressBar;
 
     public static void start(Context context, String url) {
         context.startActivity(new Intent(context, OutWebActivity.class)
@@ -63,6 +66,7 @@ public class OutWebActivity extends AppCompatActivity {
         String url = getIntent().getStringExtra("url");
 
         mWebview = (WebView) findViewById(R.id.webView);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         beginLoading = (TextView) findViewById(R.id.text_beginLoading);
         endLoading = (TextView) findViewById(R.id.text_endLoading);
         loading = (TextView) findViewById(R.id.text_Loading);
@@ -107,23 +111,22 @@ public class OutWebActivity extends AppCompatActivity {
         });
         //设置WebChromeClient类
         mWebview.setWebChromeClient(new WebChromeClient() {
-            //获取网站标题
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                System.out.println("标题在这里");
-                mtitle.setText(title);
-            }
-
-            //获取加载进度
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress < 100) {
-                    String progress = newProgress + "%";
-                    loading.setText(progress);
-                } else if (newProgress == 100) {
-                    String progress = newProgress + "%";
-                    loading.setText(progress);
+                XLog.d("网页加载进度"+newProgress+"%");
+                super.onProgressChanged(view, newProgress);
+                if (newProgress == 100) {
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    if (progressBar.getVisibility() == View.GONE)
+                        progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setProgress(newProgress);
                 }
+            }
+
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
             }
         });
 
@@ -142,9 +145,10 @@ public class OutWebActivity extends AppCompatActivity {
             //设置加载前的函数
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                System.out.println("开始加载了");
                 beginLoading.setText("开始加载了");
-                dialog = new LoadingDialog(OutWebActivity.this);
+                if (dialog == null) {
+                    dialog = new LoadingDialog(OutWebActivity.this);
+                }
                 dialog.show();
 
             }
@@ -153,7 +157,9 @@ public class OutWebActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 endLoading.setText("结束加载了");
-                dialog.dismiss();
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
 
             }
         });

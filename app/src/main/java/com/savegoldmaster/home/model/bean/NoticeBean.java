@@ -20,7 +20,7 @@ public class NoticeBean extends BaseBean {
 
     @Override
     public boolean isSuccess() {
-        return getCode() == 100;
+        return getCode() == 100||getCode() == 401;
     }
 
     public static class ContentBean {

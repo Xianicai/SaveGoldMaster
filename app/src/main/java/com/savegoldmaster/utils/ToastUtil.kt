@@ -10,6 +10,7 @@ import com.savegoldmaster.base.BaseApplication
  * Created by zhanglibin on 2016/9/8.
  */
 object ToastUtil {
+
     private val handler = Handler(Looper.getMainLooper())
 
     private var toast: Toast? = null

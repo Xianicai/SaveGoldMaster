@@ -16,6 +16,7 @@ import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import android.widget.Toast
 import com.savegoldmaster.R
 import com.savegoldmaster.account.model.bean.LoginBean
 import com.savegoldmaster.base.view.BaseMVPActivity
@@ -62,10 +63,11 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         super.initWindow()
         setTheme(R.style.TranslucentTheme)
         setWindowStatusBarColors(this)
-        url = intent.getStringExtra("URL")
+
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
+        url = intent.getStringExtra("URL")
         changeLoginStatus(mTvAccountLogin, mViewAccountLogin, loginType)
         mImageClose.setOnClickListener(this)
         mLayoutAccountLogin.setOnClickListener(this)
@@ -204,7 +206,8 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
     }
 
     override fun accountLoginFail(result: LoginBean?) {
-        ToastUtil.showMessage(result?.message)
+        Toast.makeText(applicationContext, result?.message, Toast.LENGTH_SHORT).show()
+//        ToastUtil.showMessage(result?.message)
         if (result?.code == 1003) {
             forgetPasw += 1
         }
@@ -223,7 +226,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         ToastUtil.showMessage("登录成功")
         RxBus.getDefault().post(RxEvent(EventConstant.USER_LOGIN, loginType))
         if (url.isNotEmpty()) {
-            OutWebActivity.start(this, "$url?type=1001")
+            OutWebActivity.start(this, WebUrls.BASE_URL+ url)
         }
         finish()
 

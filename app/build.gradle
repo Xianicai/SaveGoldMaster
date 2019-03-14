@@ -11,8 +11,8 @@ android {
         applicationId "com.savegoldmaster"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 3
-        versionName "1.0"
+        versionCode 1
+        versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构

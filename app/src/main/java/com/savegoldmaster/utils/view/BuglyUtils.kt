@@ -1,16 +1,20 @@
-package com.savegoldmaster.utils
+package com.savegoldmaster.utils.view
 
 import android.content.Context
 import android.view.View
 import android.widget.ProgressBar
 import com.savegoldmaster.R
 import com.savegoldmaster.home.view.MainActivity
+import com.savegoldmaster.utils.SharedPreferencesHelper
+import com.savegoldmaster.utils.ToastUtil
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.beta.Beta
 import com.tencent.bugly.beta.UpgradeInfo
 import com.tencent.bugly.beta.download.DownloadTask
 import com.tencent.bugly.beta.ui.UILifecycleListener
 import com.tencent.bugly.crashreport.CrashReport
+
+
 
 class BuglyUtils {
     companion object {
@@ -24,6 +28,7 @@ class BuglyUtils {
             Beta.initDelay = 1 * 1000
             //升级检查周期设置
             Beta.upgradeCheckPeriod = 10 * 1000
+            Beta.canShowUpgradeActs.add(MainActivity::class.java)
 
             val telephone =
                 SharedPreferencesHelper(context, "UserBean").getSharedPreference("telephone", "").toString().trim()

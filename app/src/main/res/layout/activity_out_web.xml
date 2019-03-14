@@ -6,6 +6,14 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:orientation="vertical">
+    <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:progressDrawable="@drawable/progressbar_bg"
+            android:visibility="gone"
+            android:max="100"/>
     <RelativeLayout android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:visibility="gone"

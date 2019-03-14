@@ -15,6 +15,7 @@ import com.savegoldmaster.account.LoginActivity
 import com.savegoldmaster.account.UserUtil
 import com.savegoldmaster.base.view.BaseMVPFragment
 import com.savegoldmaster.common.WebUrls
+import com.savegoldmaster.home.model.bean.NoticeBean
 import com.savegoldmaster.home.model.bean.UserBean
 import com.savegoldmaster.home.presenter.Contract.UserContract
 import com.savegoldmaster.home.presenter.UserPresenterImpl
@@ -78,6 +79,19 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
 
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if (userId.isEmpty()) {
+                mLayoutLogin.visibility = View.VISIBLE
+                mImageLogin.visibility = View.VISIBLE
+                mLayoutUserView.visibility = View.GONE
+            } else {
+                initData()
+            }
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         if (userId.isEmpty()) {
@@ -91,7 +105,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
 
     private fun initRecyclerView() {
         mLayoutRecycleOrder.setOnClickListener(this)
-        var listBean: MutableList<MineListBean> = arrayListOf()
+        var listBean: MutableList<MineListBean> = arrayListOf<MineListBean>()
         for (i in 0 until mTitles.size) {
             listBean.add(MineListBean(mTitles[i], mImages[i], mImages[i]))
         }
@@ -137,6 +151,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
     private fun initData() {
         if (userId.isNotEmpty() && token.isNotEmpty()) {
             userPresenterImpl?.getUserDetail()
+            userPresenterImpl?.getNotice()
         }
 
     }
@@ -180,6 +195,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
             mImageMsg -> {
                 //消息
                 if (UserUtil.isLogin()) {
+                    mImageUnread.visibility = View.GONE
                     OutWebActivity.start(context!!, WebUrls.MESSAGE_LIST)
                 } else {
                     LoginActivity.start(context!!, "")
@@ -243,7 +259,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
         mImageLogin.visibility = View.GONE
         mLayoutUserView.visibility = View.VISIBLE
         mImageHead.setRoundedImage(userBean.content.avatar)
-        if (userBean.content.name != null && userBean.content.name.isNotEmpty()) {
+        if (userBean.content.realnamed ==1 && userBean.content.name.isNotEmpty()) {
             mTvRealName.apply {
                 text = userBean.content.name
                 visibility = View.VISIBLE
@@ -268,7 +284,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }
-        }else{
+        } else {
             mTvOrder.visibility = View.GONE
         }
         mTvBalance.text = userBean.content.cashBalanceStr
@@ -312,11 +328,14 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
     private fun outLogin() {
         val helper = SharedPreferencesHelper(activity, "UserBean")
         helper.clear()
+        userId = ""
+        token = ""
         mLayoutLogin.visibility = View.VISIBLE
         mImageLogin.visibility = View.VISIBLE
         mLayoutUserView.visibility = View.GONE
         mTvBalance.text = "0.0"
         mTvOrder.visibility = View.GONE
+        mImageUnread.visibility = View.GONE
     }
 
 
@@ -354,5 +373,13 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
 
     override fun getUserDetailFailure(userBean: UserBean) {
         outLogin()
+    }
+
+    override fun getNotice(noticeBean: NoticeBean) {
+        if (noticeBean.content.count > 0) {
+            mImageUnread.visibility = View.VISIBLE
+        } else {
+            mImageUnread.visibility = View.GONE
+        }
     }
 }

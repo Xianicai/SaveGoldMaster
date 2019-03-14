@@ -21,7 +21,6 @@ public abstract class BaseMVPActivity<T extends BasePresenter> extends RxFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initWindow();
-        setTheme(R.style.TranslucentTheme);
         setContentView(getLayoutId());
 //        setWindowStatusBarColor(this);
         initPresenter();

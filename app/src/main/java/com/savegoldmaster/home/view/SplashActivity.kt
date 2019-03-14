@@ -1,6 +1,6 @@
 package com.savegoldmaster.home.view
 
-import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v4.view.PagerAdapter
@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.savegoldmaster.R
@@ -21,6 +20,8 @@ import com.savegoldmaster.utils.StringUtil
 import kotlinx.android.synthetic.main.activity_start_app.*
 import kotlinx.android.synthetic.main.layout_app_guide.*
 import java.util.*
+
+
 
 class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContract.AppStartView, View.OnClickListener {
 
@@ -204,26 +205,26 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
         super.onDestroy()
     }
 
-    private fun initWindows() {
-        val wm = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val height = wm.defaultDisplay.height
-        var result = 0
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            result = resources.getDimensionPixelSize(resourceId)
-        }
-        if (firstOpened) {
-            val layoutParams = mParent.layoutParams
-            layoutParams.height = height
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            mParent.layoutParams = layoutParams
-        } else {
-            val layoutParams = mParentV2.layoutParams
-            layoutParams.height = height
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            mParentV2.layoutParams = layoutParams
+    override fun initWindow() {
+        super.initWindow()
+        hideBottomUIMenu()
 
-        }
+    }
 
+    /**
+     * 隐藏虚拟按键，并且全屏
+     */
+    protected fun hideBottomUIMenu() {
+        //隐藏虚拟按键，并且全屏
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            val v = this.window.decorView
+            v.systemUiVisibility = View.GONE
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            val decorView = window.decorView
+            val uiOptions = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN)
+            decorView.systemUiVisibility = uiOptions
+        }
     }
 }

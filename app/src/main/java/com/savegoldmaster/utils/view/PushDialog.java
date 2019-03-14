@@ -1,4 +1,4 @@
-package com.savegoldmaster.utils;
+package com.savegoldmaster.utils.view;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -8,15 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import com.bumptech.glide.Glide;
 import com.savegoldmaster.R;
+import com.savegoldmaster.home.model.bean.BannerBean;
+import com.savegoldmaster.utils.StringUtil;
+import com.savegoldmaster.utils.glide.GlideImageView;
+import com.savegoldmaster.utils.webutil.OutWebActivity;
 
-public class LoadingDialog {
+public class PushDialog {
     private Activity mContext;
     private AlertDialog.Builder mBuilder;
     private AlertDialog mDialog;
     private View mView;
-    private ImageView mImageView;
+    private GlideImageView mImageView;
+    private ImageView mImageClose;
+    private BannerBean bean;
 
     /**
      * 按钮数量
@@ -31,13 +36,31 @@ public class LoadingDialog {
 
     private int mDialogWidth;
 
-    public LoadingDialog(Activity context) {
+    public PushDialog(final Activity context) {
         this.mContext = context;
         if (mContext != null && !mContext.isFinishing()) {
             mBuilder = new AlertDialog.Builder(context);
-            mView = LayoutInflater.from(context).inflate(R.layout.loading_dialog, null);
-            mImageView = (ImageView) mView.findViewById(R.id.mImageView);
-            Glide.with(context).load(R.mipmap.ic_loading).into(mImageView);
+            mView = LayoutInflater.from(context).inflate(R.layout.push_layout, null);
+            mImageView = (GlideImageView) mView.findViewById(R.id.mPushView);
+            mImageClose = (ImageView) mView.findViewById(R.id.mImageClose);
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (StringUtil.INSTANCE.isNotEmpty(bean.getContent().get(0)
+                            .getHrefUrl())) {
+                        OutWebActivity.start(context, bean.getContent().get(0)
+                                .getHrefUrl());
+                    }
+                    dismiss();
+                }
+
+            });
+            mImageClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
             mBuilder.setView(mView);
 
         }
@@ -65,15 +88,21 @@ public class LoadingDialog {
                 // 设置Dialog宽度
 
                 WindowManager.LayoutParams lp = mDialog.getWindow().getAttributes();
-                lp.dimAmount=0.0f;
-                lp.width = UIUtil.dip2px(mContext, 186);
-                lp.height = UIUtil.dip2px(mContext, 158);
+//                lp.dimAmount = 1.0f;
+//                lp.width = UIUtil.dip2px(mContext, 186);
+//                lp.height = UIUtil.dip2px(mContext, 158);
                 mDialog.getWindow().setAttributes(lp);
                 mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public PushDialog setDate(BannerBean bean) {
+        this.bean = bean;
+        mImageView.setImage(bean.getContent().get(0).getImgUrl());
+        return this;
     }
 
     public boolean isShowing() {
@@ -84,7 +113,7 @@ public class LoadingDialog {
      * 隐藏Dialog
      */
     public void dismiss() {
-        if (mDialog!=null){
+        if (mDialog != null) {
             mDialog.dismiss();
         }
     }
