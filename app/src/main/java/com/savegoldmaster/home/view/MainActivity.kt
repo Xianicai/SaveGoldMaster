@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
     private var mLoveGoldFragment: LoveGoldFragment? = null
     private var mFragmentManager: FragmentManager = supportFragmentManager
     private var userId: String? = null
+    public var isReadMsg: Boolean = false
     private var mPermissionHelper: PermissionHelper? = null
 
 
@@ -43,10 +44,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
         super.onCreate(savedInstanceState)
         setTheme(R.style.TranslucentTheme)
         setContentView(R.layout.activity_main)
-        setWindowStatusBarColor(this, R.color.white, R.color.black)
-//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        setWindowStatusBarColor(this)
         initViews()
-//        initWindows()
     }
 
 
@@ -185,7 +184,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedListe
 
     }
 
-    fun setWindowStatusBarColor(activity: Activity, statusBarColor: Int, navigationBarColor: Int) {
+    fun setWindowStatusBarColor(activity: Activity) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 val window = activity.window

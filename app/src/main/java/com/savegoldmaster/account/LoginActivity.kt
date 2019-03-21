@@ -17,12 +17,13 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
+import com.meituan.android.walle.WalleChannelReader
 import com.savegoldmaster.R
 import com.savegoldmaster.account.model.bean.LoginBean
+import com.savegoldmaster.account.presenter.LoginPresenterImpl
 import com.savegoldmaster.base.view.BaseMVPActivity
 import com.savegoldmaster.common.WebUrls
 import com.savegoldmaster.home.presenter.Contract.LoginContract
-import com.savegoldmaster.home.presenter.LoginPresenterImpl
 import com.savegoldmaster.utils.ConfirmDialog
 import com.savegoldmaster.utils.SharedPreferencesHelper
 import com.savegoldmaster.utils.ToastUtil
@@ -49,12 +50,13 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
     }
 
 
-    private var loginType = ACCOUNT_LOGIN
+    private var loginType = FASTER_LOGIN
     private var loginPresenterImpl: LoginPresenterImpl? = null
     private var countDownTimer: CountDownTimer? = null
     private var loginBean: LoginBean? = null
     private var forgetPasw = 0
     private var url = ""
+    private var dialog: ConfirmDialog? = null
     override fun getLayoutId(): Int {
         return R.layout.activity_login
     }
@@ -68,13 +70,14 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
 
     override fun initViews(savedInstanceState: Bundle?) {
         url = intent.getStringExtra("URL")
-        changeLoginStatus(mTvAccountLogin, mViewAccountLogin, loginType)
+        changeLoginStatus(mTvFasterLogin, mViewFasterLogin, loginType)
         mImageClose.setOnClickListener(this)
         mLayoutAccountLogin.setOnClickListener(this)
         mLayoutFasterLogin.setOnClickListener(this)
         mImageClearPhoneNum.setOnClickListener(this)
         mTvGetCode.setOnClickListener(this)
         mTvLogin.setOnClickListener(this)
+        mTvUserAgreement.setOnClickListener(this)
         mTvForgetPassword.setOnClickListener(this)
         mImageHiddenPassword.setOnClickListener(this)
         mImageHiddenPassword.setImageResource(R.mipmap.ic_hidden_password)
@@ -161,7 +164,8 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
                     return
                 }
                 if (loginType == FASTER_LOGIN && password.length == 6) {
-                    loginPresenterImpl?.fasterLogin(phoneNum, password, "", "", "")
+                    val source = "ZYPT_#_ANDROID_appstore-${WalleChannelReader.getChannel(applicationContext)}"
+                    loginPresenterImpl?.fasterLogin(phoneNum, password, "", "", source)
                 } else if (loginType == ACCOUNT_LOGIN && password.length >= 6) {
                     loginPresenterImpl?.accountLogin(phoneNum, password)
                 } else {
@@ -183,6 +187,9 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
             }
             mTvForgetPassword -> {
                 OutWebActivity.start(this, WebUrls.FIND_PASSWORD)
+            }
+            mTvUserAgreement -> {
+                OutWebActivity.start(this, WebUrls.USERAGREEMENT)
             }
         }
     }
@@ -206,13 +213,18 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
     }
 
     override fun accountLoginFail(result: LoginBean?) {
-        Toast.makeText(applicationContext, result?.message, Toast.LENGTH_SHORT).show()
-//        ToastUtil.showMessage(result?.message)
-        if (result?.code == 1003) {
-            forgetPasw += 1
-        }
-        if (forgetPasw > 2) {
-            showTips()
+        when (result?.code) {
+            1002 -> {
+                showBannedTips()
+            }
+            1003 -> {
+                forgetPasw += 1
+                if (forgetPasw > 2) {
+                    showTips()
+                } else {
+                    Toast.makeText(applicationContext, result.message, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -226,7 +238,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         ToastUtil.showMessage("登录成功")
         RxBus.getDefault().post(RxEvent(EventConstant.USER_LOGIN, loginType))
         if (url.isNotEmpty()) {
-            OutWebActivity.start(this, WebUrls.BASE_URL+ url)
+            OutWebActivity.start(this, WebUrls.BASE_URL + url)
         }
         finish()
 
@@ -334,5 +346,24 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun showBannedTips() {
+
+        dialog = ConfirmDialog(this)
+            .setTitle("提示")
+            .setMessage(
+                "很抱歉哦~您暂时被我们禁用了，禁用期\n" +
+                        "间您无法执行相关操作，若有问题请联系\n" +
+                        "客服: 4008-196-199"
+            )
+            .isDoubleButton(false)
+            .setSingleButtonListener(object : ConfirmDialog.OnConfirmDialogClickListener {
+                override fun onClick(dialog: ConfirmDialog?, v: View?) {
+                    dialog?.dismiss()
+                }
+
+            })
+        dialog?.show()
     }
 }

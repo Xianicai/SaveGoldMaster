@@ -23,10 +23,11 @@ public class ConfirmDialog {
     private TextView mTvDesc;
     private TextView mTvLeft;
     private TextView mTvRight;
-
+    private String mSingleBtnText;
 
     private String mLeftText;
     private OnConfirmDialogClickListener mBtn1Listener;
+    private OnConfirmDialogClickListener mSingleBtnListener;
     private String mRightText;
     private OnConfirmDialogClickListener mBtn2Listener;
     private DialogInterface.OnDismissListener mOnDismissListener;
@@ -42,6 +43,8 @@ public class ConfirmDialog {
     private boolean mCancelable = true;
 
     private int mDialogWidth;
+    private View mDoubleLayout;
+    private TextView mTvIKnow;
 
     public ConfirmDialog(Activity context) {
         this.mContext = context;
@@ -52,6 +55,8 @@ public class ConfirmDialog {
             mTvDesc = (TextView) mView.findViewById(R.id.mTvDesc);
             mTvLeft = (TextView) mView.findViewById(R.id.mTvLeft);
             mTvRight = (TextView) mView.findViewById(R.id.mTvRight);
+            mTvIKnow = (TextView) mView.findViewById(R.id.mTvIKnow);
+            mDoubleLayout = mView.findViewById(R.id.mDoubleLayout);
             mTvTitle.getPaint().setFakeBoldText(true);
             mBuilder.setView(mView);
             // 初始化Dialog的宽度，屏幕的6/7
@@ -101,6 +106,32 @@ public class ConfirmDialog {
         mBtnNum = 2;
         return this;
     }
+
+    /**
+     * 设置单个按钮Dialog的点击事件(按钮为“知道了”)
+     *
+     * @param l
+     *            点击事件，点击事件为空则会设置一个默认事件---点击关闭Dialog
+     */
+    public ConfirmDialog setSingleButtonListener(OnConfirmDialogClickListener l) {
+        return setSingleButtonListener(null, l);
+    }
+    /**
+     * 设置单个按钮Dialog的文字和点击事件
+     *
+     * @param text
+     *            按钮文字，为空则会设置默认的文字
+     * @param l
+     *            点击事件，点击事件为空则会设置一个默认事件---点击关闭Dialog
+     */
+    public ConfirmDialog setSingleButtonListener(String text, OnConfirmDialogClickListener l) {
+        this.mSingleBtnText = text;
+        this.mSingleBtnListener = l;
+        mBtnNum = 1;
+        return this;
+    }
+
+
 
     /**
      * 设置两个按钮Dialog的点击事件(左边的按钮是“取消”，右边是“确定”)，点击事件为空则会设置一个默认事件---点击关闭Dialog
@@ -153,6 +184,11 @@ public class ConfirmDialog {
             } else {
                 mTvRight.setOnClickListener(new OnDialogButtonClick(mBtn2Listener));
             }
+            if (mSingleBtnListener == null) {
+                mTvIKnow.setOnClickListener(new DialogDismissListener());
+            } else {
+                mTvIKnow.setOnClickListener(new OnDialogButtonClick(mSingleBtnListener));
+            }
             mDialog = mBuilder.create();
             mDialog.setOnDismissListener(mOnDismissListener);
             mDialog.setCancelable(mCancelable);
@@ -175,6 +211,17 @@ public class ConfirmDialog {
 
     public boolean isShowing() {
         return mDialog != null && mDialog.isShowing();
+    }
+
+    public ConfirmDialog isDoubleButton(boolean isDoubleButton) {
+        if (isDoubleButton) {
+            mTvIKnow.setVisibility(View.GONE);
+            mDoubleLayout.setVisibility(View.VISIBLE);
+        } else {
+            mTvIKnow.setVisibility(View.VISIBLE);
+            mDoubleLayout.setVisibility(View.GONE);
+        }
+        return this;
     }
 
     /**

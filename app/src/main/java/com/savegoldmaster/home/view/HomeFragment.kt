@@ -3,6 +3,8 @@ package com.savegoldmaster.home.view
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.CountDownTimer
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -10,9 +12,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.elvishew.xlog.XLog
+import com.meituan.android.walle.WalleChannelReader
 import com.savegoldmaster.R
 import com.savegoldmaster.account.LoginActivity
 import com.savegoldmaster.account.UserUtil
+import com.savegoldmaster.base.BaseApplication
 import com.savegoldmaster.base.view.BaseMVPFragment
 import com.savegoldmaster.common.WebUrls
 import com.savegoldmaster.home.model.bean.*
@@ -22,6 +26,7 @@ import com.savegoldmaster.home.view.adapter.HomeAdapter
 import com.savegoldmaster.utils.DateTimeUtil
 import com.savegoldmaster.utils.LocationUtils
 import com.savegoldmaster.utils.StringUtil
+import com.savegoldmaster.utils.ToastUtil
 import com.savegoldmaster.utils.glide.GlideImageView
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
@@ -32,6 +37,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.layout_home_company_info.*
 import kotlinx.android.synthetic.main.layout_home_company_info.view.*
 
+
 class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView, View.OnClickListener {
 
 
@@ -41,7 +47,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         }
     }
 
-    private var listBean: ArrayList<Object> = ArrayList()
+    private var listBean: ArrayList<Any> = ArrayList()
     private var homePresenterImpl: HomePresenterImpl? = null
     private var homeAdapter: HomeAdapter? = null
     private var start: CountDownTimer? = null
@@ -52,7 +58,27 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     }
 
     override fun initView(view: View?) {
+
+        var mPackageManager = BaseApplication.Companion.instance?.getPackageManager()
+        var mPackageInfo: PackageInfo;
+
+        try {
+            mPackageInfo = mPackageManager!!.getPackageInfo("com.savegoldmaster", 0);
+            var packageName = mPackageInfo.applicationInfo;
+//            ToastUtil.showMessage("应用市场信息"+packageName)
+            XLog.d("应用市场信息"+packageName)
+        } catch (e: PackageManager.NameNotFoundException) {
+
+            e.printStackTrace();
+        }
+        val channel = WalleChannelReader.getChannel(BaseApplication.instance.applicationContext)
+        ToastUtil.showMessage("应用市场信息"+channel)
+
         addEvent()
+        //获取推送活动弹窗
+        if (UserUtil.isLogin()) {
+            homePresenterImpl?.getNotice()
+        }
         mImageMsg.setOnClickListener(this)
         mImageClose.setOnClickListener(this)
         mImageMsgV2.setOnClickListener(this)
@@ -86,7 +112,6 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         super.onHiddenChanged(hidden)
         if (!hidden) {
             if (UserUtil.isLogin()) {
-                XLog.d("请求消息列表了")
                 homePresenterImpl?.getNotice()
             }
         }
@@ -95,12 +120,9 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     private fun initData() {
         listBean.clear()
         homeAdapter?.notifyDataSetChanged()
-        listBean.add(GoldPriceBean() as Object)
+        listBean.add(GoldPriceBean() as Any)
         //获取轮播图
         homePresenterImpl?.getBanner(1, 5, 2)
-        if (UserUtil.isLogin()) {
-            homePresenterImpl?.getNotice()
-        }
         homePresenterImpl?.getGoldPrice()
         homePresenterImpl?.getGoldNewOder()
         homePresenterImpl?.getRecycleGold()
@@ -125,6 +147,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
             }
             mImageMsgV2, mImageMsg -> {
                 if (UserUtil.isLogin()) {
+//                    (activity as MainActivity).isReadMsg = true
                     mImageUnreadV2.visibility = View.GONE
                     mImageUnread.visibility = View.GONE
                     OutWebActivity.start(context!!, WebUrls.MESSAGE_LIST)
@@ -152,6 +175,11 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
 
     override fun getNotice(noticeBean: NoticeBean) {
         this.noticeBean = noticeBean
+//        if ((activity as MainActivity).isReadMsg) {
+//            mImageUnreadV2.visibility = View.GONE
+//            mImageUnread.visibility = View.GONE
+//            return
+//        }
         if (StringUtil.isNotEmpty(noticeBean.content.title)) {
             mLayoutNotice.visibility = View.VISIBLE
             buildNotice(noticeBean.content)
@@ -173,7 +201,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     override fun getGoldPrice(goldPriceBean: GoldPriceBean) {
         for (i in 0 until listBean.size) {
             if (listBean[i] is GoldPriceBean) {
-                listBean[i] = goldPriceBean as Object
+                listBean[i] = goldPriceBean as Any
             }
         }
         RxBus.getDefault().post(RxEvent(EventConstant.NOTIF_GOLD_PRICE, goldPriceBean))
@@ -181,26 +209,26 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     }
 
     override fun getGoldNewOder(userOderBean: UserOderBean) {
-        listBean.add(buildOrderTime(userOderBean) as Object)
+        listBean.add(buildOrderTime(userOderBean) as Any)
         homeAdapter?.notifyDataSetChanged()
 
     }
 
     override fun getRecycleGold(recyclerGoldBean: RecyclerGoldBean) {
-        listBean.add(recyclerGoldBean as Object)
+        listBean.add(recyclerGoldBean as Any)
         homeAdapter?.notifyDataSetChanged()
 
     }
 
 
     override fun getNearbyShop(nearbyShopBean: NearbyShopBean) {
-        listBean.add(nearbyShopBean as Object)
+        listBean.add(nearbyShopBean as Any)
         homeAdapter?.notifyDataSetChanged()
 
     }
 
     override fun getNewInformation(informationBean: InformationBean) {
-        listBean.add(informationBean as Object)
+        listBean.add(informationBean as Any)
         homeAdapter?.notifyDataSetChanged()
     }
 
@@ -279,17 +307,22 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     private fun addEvent() {
         RxBus.getDefault().toObservable(RxEvent::class.java)
             .subscribe { t ->
-                when {t?.eventType == EventConstant.USER_LOGIN -> {
-                    initData()
-                }
-                    t?.eventType == EventConstant.OUT_LOGIN -> (context as Activity).runOnUiThread(object : Runnable {
-                        override fun run() {
-                            mLayoutNotice.visibility = View.GONE
-                            mImageUnreadV2.visibility = View.GONE
-                            mImageUnread.visibility = View.GONE
+                when {
+                    t?.eventType == EventConstant.USER_LOGIN -> {
+                        (context as Activity).runOnUiThread { initData() }
+                    }
+                    t?.eventType == EventConstant.OUT_LOGIN -> (context as Activity).runOnUiThread {
+                        mLayoutNotice.visibility = View.GONE
+                        mImageUnreadV2.visibility = View.GONE
+                        mImageUnread.visibility = View.GONE
+                    }
+                    t?.eventType == EventConstant.REFRESH_MSG -> {
+                        if (UserUtil.isLogin()) {
+                            homePresenterImpl?.getNotice()
                         }
-                    })
+                    }
                 }
             }
     }
+
 }

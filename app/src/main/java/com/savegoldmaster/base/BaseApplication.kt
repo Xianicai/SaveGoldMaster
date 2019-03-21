@@ -9,6 +9,8 @@ import com.savegoldmaster.utils.view.BuglyUtils
 import io.objectbox.BoxStore
 
 
+
+
 /**
  * ZY:
  * Created by zhanglibin on 2018/9/2.
@@ -16,7 +18,7 @@ import io.objectbox.BoxStore
 class BaseApplication : Application() {
 
     companion object {
-        var instance: BaseApplication? = null
+        lateinit var instance: BaseApplication
         var boxStore: BoxStore? = null
     }
 
@@ -27,6 +29,7 @@ class BaseApplication : Application() {
         initObjectBox()
         initBugly()
         initJPush()
+
     }
 
     private fun initBugly() {

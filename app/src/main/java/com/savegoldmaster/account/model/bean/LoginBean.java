@@ -48,6 +48,6 @@ public class LoginBean extends BaseBean {
 
     @Override
     public boolean isSuccess() {
-        return getCode() == -1005 || getCode() == 100 || getCode() == 1003;
+        return getCode() == -1005 || getCode() == 100 || getCode() == 1003||getCode() == 1002;
     }
 }

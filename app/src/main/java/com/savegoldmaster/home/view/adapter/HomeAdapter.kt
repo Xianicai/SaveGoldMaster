@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.layout_home_order_list.view.*
 import kotlinx.android.synthetic.main.layout_order_text.view.*
 import kotlinx.android.synthetic.main.layout_total_recycle.view.*
 
-class HomeAdapter(private var datas: ArrayList<Object>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HomeAdapter(private var datas: ArrayList<Any>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         val TYPE_HOME_GOLD_PRICE: Int = 0
         val TYPE_HOME_ORDER_LIST: Int = 1

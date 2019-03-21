@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.*;
 import android.webkit.*;
 import android.widget.ProgressBar;
@@ -24,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
+import com.meituan.android.walle.WalleChannelReader;
 import com.savegoldmaster.R;
 import com.savegoldmaster.account.LoginActivity;
 import com.savegoldmaster.base.BaseApplication;
@@ -71,7 +71,15 @@ public class OutWebActivity extends AppCompatActivity {
         endLoading = (TextView) findViewById(R.id.text_endLoading);
         loading = (TextView) findViewById(R.id.text_Loading);
         mtitle = (TextView) findViewById(R.id.title);
-
+        mWebview.loadUrl(url);
+        //设置不用系统浏览器打开,直接显示在当前Webview
+        mWebview.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
         mWebSettings = mWebview.getSettings();
         mWebview.addJavascriptInterface(new JSInterface(), "Android");
         //设置 缓存模式
@@ -100,35 +108,7 @@ public class OutWebActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mWebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-        mWebview.loadUrl(url);
-        //设置不用系统浏览器打开,直接显示在当前Webview
-        mWebview.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
-        //设置WebChromeClient类
-        mWebview.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                XLog.d("网页加载进度"+newProgress+"%");
-                super.onProgressChanged(view, newProgress);
-                if (newProgress == 100) {
-                    progressBar.setVisibility(View.GONE);
-                } else {
-                    if (progressBar.getVisibility() == View.GONE)
-                        progressBar.setVisibility(View.VISIBLE);
-                    progressBar.setProgress(newProgress);
-                }
-            }
 
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-            }
-        });
 
         mWebview.setWebChromeClient(new WebChromeClient() {
             //配置权限（同样在WebChromeClient中实现）
@@ -146,10 +126,10 @@ public class OutWebActivity extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 beginLoading.setText("开始加载了");
-                if (dialog == null) {
-                    dialog = new LoadingDialog(OutWebActivity.this);
-                }
-                dialog.show();
+//                if (dialog == null) {
+//                    dialog = new LoadingDialog(OutWebActivity.this);
+//                }
+//                dialog.show();
 
             }
 
@@ -157,15 +137,28 @@ public class OutWebActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 endLoading.setText("结束加载了");
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+//                if (dialog != null) {
+//                    dialog.dismiss();
+//                }
 
             }
         });
-
+//
         //处理h5调用相机相册
         mWebview.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                XLog.d("网页加载进度" + newProgress + "%");
+                if (newProgress == 100) {
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    if (progressBar.getVisibility() == View.GONE)
+                        progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setProgress(newProgress);
+                }
+            }
+
             @Override
             public boolean onShowFileChooser(WebView webView,
                                              ValueCallback<Uri[]> filePathCallback,
@@ -272,6 +265,11 @@ public class OutWebActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
+        public String getSource() {
+            return WalleChannelReader.getChannel(getApplicationContext());
+        }
+
+        @JavascriptInterface
         public void toNative(int type, String url) {
             switch (type) {
                 case 1001:
@@ -280,6 +278,10 @@ public class OutWebActivity extends AppCompatActivity {
                 case 1002:
                     RxBus.getDefault().post(new RxEvent(EventConstant.USER_LOGIN, LoginActivity.Companion.getACCOUNT_LOGIN()));
                     break;
+                case 1003:
+                    RxBus.getDefault().post(new RxEvent(EventConstant.REFRESH_MSG, LoginActivity.Companion.getACCOUNT_LOGIN()));
+                    break;
+
 
             }
 
@@ -353,7 +355,6 @@ public class OutWebActivity extends AppCompatActivity {
                 //MyToast.makeText(getApplicationContext(), "请在应用权限管理中打开“相机”访问权限！", MyToast.LENGTH_LONG).show();
             }
         } else if (1 == requestCode) {
-            Log.e("--->", "走到这里");
             /*if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 updateManager.showDownloadDialog("1");
             } else {

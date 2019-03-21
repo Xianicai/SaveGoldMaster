@@ -2,8 +2,6 @@ package com.savegoldmaster.utils.retrofit.factory;
 
 
 import com.google.gson.Gson;
-import com.savegoldmaster.base.BaseBean;
-import com.savegoldmaster.utils.ToastUtil;
 import com.savegoldmaster.utils.retrofit.UnicodeUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
@@ -29,11 +27,11 @@ public class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> 
     public T convert(ResponseBody value) throws IOException {
 
         String response = UnicodeUtil.decodeUnicode(value.string()).trim();
-        BaseBean baseBean = gson.fromJson(response, BaseBean.class);
-        if (baseBean.isSuccess()) {
-        } else {
-            ToastUtil.INSTANCE.showMessage(baseBean.getMessage());
-        }
+//        BaseBean baseBean = gson.fromJson(response, BaseBean.class);
+//        if (baseBean.isSuccess()) {
+//        } else {
+//            ToastUtil.INSTANCE.showMessage(baseBean.getMessage());
+//        }
         return gson.fromJson(response, type);
 
 

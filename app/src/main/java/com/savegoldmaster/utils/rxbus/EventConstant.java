@@ -8,4 +8,6 @@ public class EventConstant {
     public static final String NOTIF_GOLD_PRICE = "notif_gold_price";
     //退出登陆
     public static final String OUT_LOGIN = "out_login";
+    //刷新消息列表
+    public static final String REFRESH_MSG = "refresh_msg";
 }

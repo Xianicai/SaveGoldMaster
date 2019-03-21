@@ -44,6 +44,9 @@ public class SharedPreferencesHelper {
      * 获取保存的数据
      */
     public Object getSharedPreference(String key, Object defaultObject) {
+        if (sharedPreferences == null) {
+            return null;
+        }
         if (defaultObject instanceof String) {
             return sharedPreferences.getString(key, (String) defaultObject);
         } else if (defaultObject instanceof Integer) {

@@ -3,16 +3,25 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.objectbox'
+apply plugin: 'walle'
 
 
 android {
+    signingConfigs {
+        debugkeystore {
+            keyAlias 'debugkeystore'
+            keyPassword 'android'
+            storeFile file('/Users/zhanglibin/Desktop/Android/Studio_WorkSpace/SaveGoldMaster/app/debug.keystore')
+            storePassword 'android'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.savegoldmaster"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0.6"
+        versionCode 2
+        versionName "1.0.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构
@@ -27,16 +36,29 @@ android {
         ]
     }
     buildTypes {
+        debug {
+            debuggable true
+            jniDebuggable true
+            signingConfig signingConfigs.debugkeystore
+            renderscriptDebuggable true
+            minifyEnabled true
+            zipAlignEnabled true
+        }
         release {
+            debuggable false
+            jniDebuggable false
+            signingConfig signingConfigs.debugkeystore
+            renderscriptDebuggable false
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            pseudoLocalesEnabled false
+            zipAlignEnabled false
         }
     }
 }
 
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0-alpha1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
@@ -75,5 +97,14 @@ dependencies {
     //jpush
     implementation 'cn.jiguang.sdk:jpush:3.1.6'
     implementation 'cn.jiguang.sdk:jcore:1.2.5'
-
+    //walle
+    implementation 'com.meituan.android.walle:library:1.1.6'
+}
+walle {
+    // 指定渠道包的输出路径
+    apkOutputFolder = new File("${project.buildDir}/outputs/channels");
+    // 定制渠道包的APK的文件名称
+    apkFileNameFormat = '${appName}-${packageName}-${channel}-${buildType}-v${versionName}-${versionCode}-${buildTime}.apk';
+    // 渠道配置文件
+    channelFile = new File("${project.getProjectDir()}/channel")
 }

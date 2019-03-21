@@ -4,6 +4,7 @@ import android.content.Context
 import com.savegoldmaster.R
 import com.savegoldmaster.common.WebUrls
 import com.savegoldmaster.home.model.bean.NearbyShopBean
+import com.savegoldmaster.utils.LocationUtils
 import com.savegoldmaster.utils.adapter.CommonRecyclerAdapter
 import com.savegoldmaster.utils.adapter.ViewHolder
 import com.savegoldmaster.utils.webutil.OutWebActivity
@@ -29,7 +30,8 @@ class HomeNearbyShopAdapter(context: Context, datas: ArrayList<NearbyShopBean.Co
         }
         holder.itemView.mTvShopCover.setImage(item.url)
         holder.itemView.setOnClickListener {
-            OutWebActivity.start(holder.itemView.context, WebUrls.SHOP_DETAIL + item.id)
+            val location = LocationUtils.getInstance(holder.itemView.context).showLocation()
+            OutWebActivity.start(holder.itemView.context, WebUrls.SHOP_DETAIL + item.id+"&lat="+location?.latitude+"&lng="+location?.longitude)
         }
     }
 }

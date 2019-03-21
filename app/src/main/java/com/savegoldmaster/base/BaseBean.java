@@ -16,7 +16,8 @@ public class BaseBean {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(int code)
+    {
         this.code = code;
     }
 

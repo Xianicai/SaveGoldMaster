@@ -10,6 +10,7 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import cn.jpush.android.api.JPushInterface
 import com.savegoldmaster.R
 import com.savegoldmaster.account.LoginActivity
 import com.savegoldmaster.account.UserUtil
@@ -195,6 +196,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
             mImageMsg -> {
                 //消息
                 if (UserUtil.isLogin()) {
+//                    (activity as MainActivity).isReadMsg = true
                     mImageUnread.visibility = View.GONE
                     OutWebActivity.start(context!!, WebUrls.MESSAGE_LIST)
                 } else {
@@ -250,6 +252,10 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
 
     override fun getUserDetail(userBean: UserBean) {
         this.userBean = userBean
+        JPushInterface.setTags(activity, 0, HashSet<String>().apply {
+            add(userId)
+        })
+        JPushInterface.setAlias(activity, 0, userBean.content.telephone)
         //bugly上报userId
         CrashReport.setUserId(userBean.content.telephone)
         SharedPreferencesHelper(context, "UserBean").apply {
@@ -259,7 +265,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
         mImageLogin.visibility = View.GONE
         mLayoutUserView.visibility = View.VISIBLE
         mImageHead.setRoundedImage(userBean.content.avatar)
-        if (userBean.content.realnamed ==1 && userBean.content.name.isNotEmpty()) {
+        if (userBean.content.realnamed == 1 && userBean.content.name.isNotEmpty()) {
             mTvRealName.apply {
                 text = userBean.content.name
                 visibility = View.VISIBLE
@@ -285,7 +291,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
                 )
             }
         } else {
-            mTvOrder.visibility = View.GONE
+            mTvOrder.text = ""
         }
         mTvBalance.text = userBean.content.cashBalanceStr
         if (userBean.content.isLoginPwd == 0 && loginType == LoginActivity.FASTER_LOGIN) {
@@ -321,6 +327,11 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
                         }
                         initData()
                     }
+                    t?.eventType == EventConstant.REFRESH_MSG -> {
+                        if (UserUtil.isLogin()) {
+                            userPresenterImpl?.getNotice()
+                        }
+                    }
                 }
             }
     }
@@ -334,7 +345,7 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
         mImageLogin.visibility = View.VISIBLE
         mLayoutUserView.visibility = View.GONE
         mTvBalance.text = "0.0"
-        mTvOrder.visibility = View.GONE
+        mTvOrder.text = ""
         mImageUnread.visibility = View.GONE
     }
 
@@ -376,10 +387,15 @@ class MineFragment : BaseMVPFragment<UserPresenterImpl>(), UserContract.UserView
     }
 
     override fun getNotice(noticeBean: NoticeBean) {
+//        if ((activity as MainActivity).isReadMsg){
+//            mImageUnread.visibility = View.GONE
+//            return
+//        }
         if (noticeBean.content.count > 0) {
             mImageUnread.visibility = View.VISIBLE
         } else {
             mImageUnread.visibility = View.GONE
         }
     }
+
 }

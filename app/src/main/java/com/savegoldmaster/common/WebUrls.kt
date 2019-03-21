@@ -128,6 +128,10 @@ class WebUrls {
          *设置密码
          */
         const val SETPASSWORD = "${BASE_URL}setpassword"
+        /**
+         *用户协议
+         */
+        const val USERAGREEMENT = "${BASE_URL}useragreement"
 
     }
 }

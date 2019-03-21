@@ -1,4 +1,4 @@
-package com.savegoldmaster.home.presenter
+package com.savegoldmaster.account.presenter
 
 import com.savegoldmaster.account.model.bean.LoginBean
 import com.savegoldmaster.account.model.impl.LoginModelImpl
@@ -30,7 +30,12 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
             .subscribe(object : RespondObserver<LoginBean>() {
                 override fun onSuccess(result: LoginBean?) {
                     super.onSuccess(result)
-                    mView?.fasterLoginSuccess(result!!)
+                    if (result?.code == 1002){
+                        mView?.accountLoginFail(result)
+                    }else{
+                        mView?.fasterLoginSuccess(result!!)
+                    }
+
                 }
             })
     }
@@ -41,7 +46,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
             .subscribe(object : RespondObserver<LoginBean>() {
                 override fun onSuccess(result: LoginBean?) {
                     super.onSuccess(result)
-                    if (result?.code == 1003){
+                    if (result?.code == 1003||result?.code == 1002){
                         mView?.accountLoginFail(result)
                     }else{
                         mView?.accountLoginSuccess(result!!)
