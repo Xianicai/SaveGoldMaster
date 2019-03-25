@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.elvishew.xlog.XLog
-import com.meituan.android.walle.WalleChannelReader
 import com.savegoldmaster.R
 import com.savegoldmaster.account.LoginActivity
 import com.savegoldmaster.account.UserUtil
@@ -26,7 +25,6 @@ import com.savegoldmaster.home.view.adapter.HomeAdapter
 import com.savegoldmaster.utils.DateTimeUtil
 import com.savegoldmaster.utils.LocationUtils
 import com.savegoldmaster.utils.StringUtil
-import com.savegoldmaster.utils.ToastUtil
 import com.savegoldmaster.utils.glide.GlideImageView
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
@@ -71,8 +69,8 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
 
             e.printStackTrace();
         }
-        val channel = WalleChannelReader.getChannel(BaseApplication.instance.applicationContext)
-        ToastUtil.showMessage("应用市场信息"+channel)
+//        val channel = WalleChannelReader.getChannel(BaseApplication.instance.applicationContext)
+//        ToastUtil.showMessage("应用市场信息"+channel)
 
         addEvent()
         //获取推送活动弹窗
