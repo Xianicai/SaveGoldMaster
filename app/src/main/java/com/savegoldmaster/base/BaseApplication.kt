@@ -5,10 +5,9 @@ import cn.jpush.android.api.JPushInterface
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
+import com.savegoldmaster.push.HMSAgent
 import com.savegoldmaster.utils.view.BuglyUtils
 import io.objectbox.BoxStore
-
-
 
 
 /**
@@ -28,12 +27,21 @@ class BaseApplication : Application() {
         initLog()
         initObjectBox()
         initBugly()
-        initJPush()
+        if ("HUAWEI" == android.os.Build.MANUFACTURER) {
+            initHuaWei()
+        } else {
+            initJPush()
+        }
 
     }
 
+    private fun initHuaWei() {
+        HMSAgent.init(this)
+    }
+
+
     private fun initBugly() {
-       BuglyUtils.initBugly(instance!!, "da0f8f9fef", true)
+        BuglyUtils.initBugly(instance!!, "da0f8f9fef", true)
 
     }
 
@@ -50,7 +58,8 @@ class BaseApplication : Application() {
 //            }
 //        }
     }
-    private fun initJPush(){
+
+    private fun initJPush() {
         JPushInterface.setDebugMode(true)
         JPushInterface.init(this)
     }

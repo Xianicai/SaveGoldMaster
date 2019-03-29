@@ -15,11 +15,14 @@ import com.savegoldmaster.base.view.BaseMVPActivity
 import com.savegoldmaster.home.model.bean.BannerBean
 import com.savegoldmaster.home.presenter.AppStartPresenterImpl
 import com.savegoldmaster.home.presenter.Contract.AppStartContract
+import com.savegoldmaster.push.HMSAgent
+import com.savegoldmaster.push.handler.GetTokenHandler
 import com.savegoldmaster.utils.SharedPreferencesHelper
 import com.savegoldmaster.utils.StringUtil
 import kotlinx.android.synthetic.main.activity_start_app.*
 import kotlinx.android.synthetic.main.layout_app_guide.*
 import java.util.*
+
 
 
 
@@ -58,6 +61,8 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
+        connectHuaWei()
+        getToken()
 //        initWindows()
         presenter?.getAppAd(6, 1, 2)
         if (firstOpened) {
@@ -96,7 +101,7 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
                 if (StringUtil.isNotEmpty(url)) {
                 }
             }
-            finshGuide ->{
+            finshGuide -> {
                 MainActivity.start(this@SplashActivity)
                 finish()
             }
@@ -226,5 +231,21 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
                     or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN)
             decorView.systemUiVisibility = uiOptions
         }
+    }
+
+    /*
+* 连接华为服务器
+* */
+    fun connectHuaWei() {
+        HMSAgent.connect(this) {
+        }
+    }
+
+
+    private fun getToken() {
+        HMSAgent.Push.getToken(object : GetTokenHandler {
+            override fun onResult(rst: Int) {
+            }
+        })
     }
 }

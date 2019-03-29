@@ -307,7 +307,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
             .subscribe { t ->
                 when {
                     t?.eventType == EventConstant.USER_LOGIN -> {
-                        (context as Activity).runOnUiThread { initData() }
+                        (activity as Activity).runOnUiThread { initData() }
                     }
                     t?.eventType == EventConstant.OUT_LOGIN -> (context as Activity).runOnUiThread {
                         mLayoutNotice.visibility = View.GONE

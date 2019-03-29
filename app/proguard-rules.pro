@@ -39,3 +39,15 @@
 -keepclassmembers class * extends android.webkit.WebChromeClient{
 public void openFileChooser(…);
 }
+#华为推送  混淆
+-ignorewarning
+-keepattributes *Annotation*
+-keepattributes Exceptions
+-keepattributes InnerClasses
+-keepattributes Signature
+-keepattributes SourceFile,LineNumberTable
+-keep class com.hianalytics.android.**{*;}
+-keep class com.huawei.updatesdk.**{*;}
+-keep class com.huawei.hms.**{*;}
+
+-keep class com.huawei.android.hms.agent.**{*;}
