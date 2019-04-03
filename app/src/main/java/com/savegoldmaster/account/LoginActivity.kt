@@ -3,6 +3,7 @@ package com.savegoldmaster.account
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -33,6 +34,7 @@ import com.savegoldmaster.utils.rxbus.RxEvent
 import com.savegoldmaster.utils.webutil.OutWebActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.regex.Pattern
+import java.util.regex.PatternSyntaxException
 
 
 class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.LoginView, View.OnClickListener {
@@ -80,9 +82,7 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
         mTvUserAgreement.setOnClickListener(this)
         mTvForgetPassword.setOnClickListener(this)
         mImageHiddenPassword.setOnClickListener(this)
-        mImageHiddenPassword.setImageResource(R.mipmap.ic_hidden_password)
-        mEdPassword.transformationMethod = PasswordTransformationMethod.getInstance()
-
+        mEdPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
         mEdPhoneNum.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 mImageClearPhoneNum.visibility =
@@ -307,10 +307,12 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
     /**
      * 检查手机号是否合法
      * */
+    @Throws(PatternSyntaxException::class)
     fun isCellphone(str: String): Boolean {
-        val pattern = Pattern.compile("^((13[0-9])|(14[5,7,9])|(15[^4])|(18[0-9])|(17[0,1,3,5,6,7,8]))\\d{8}$")
-        val matcher = pattern.matcher(str)
-        return matcher.matches()
+        val regExp = "^((13[0-9])|(15[^4])|(166)|(17[0-8])|(18[0-9])|(19[8-9])|(147,145))\\d{8}$"
+        val p = Pattern.compile(regExp)
+        val m = p.matcher(str)
+        return m.matches()
     }
 
     override fun onDestroy() {
@@ -365,5 +367,17 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
 
             })
         dialog?.show()
+    }
+
+    //key为渠道名的key，对应友盟的 UMENG_CHANNEL
+    private fun getChannel(context: Context, key: String): String? {
+        try {
+            val pm = context.packageManager
+            val appInfo = pm.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+            return appInfo.metaData.getString(key)
+        } catch (ignored: PackageManager.NameNotFoundException) {
+        }
+
+        return ""
     }
 }

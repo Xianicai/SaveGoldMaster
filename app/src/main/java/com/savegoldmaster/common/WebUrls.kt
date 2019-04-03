@@ -5,7 +5,8 @@ class WebUrls {
         /**
          * Base地址
          */
-        const val BASE_URL = "https://app-test.au32.cn/"
+//        const val BASE_URL = "https://app-test.au32.cn/"
+        const val BASE_URL = "https://app.au32.cn/"
 
         /**
          * 店铺详情

@@ -5,7 +5,8 @@ class Urls {
         /**
          * Base地址
          */
-        const val BASE_URL = "https://api-test.au32.cn/"
+//        const val BASE_URL = "https://api-test.au32.cn/"
+        const val BASE_URL = " https://openapi.au32.cn/"
 
         /**
          * 获取验证码
