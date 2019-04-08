@@ -3,28 +3,22 @@ package com.savegoldmaster.home.view
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.os.CountDownTimer
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.elvishew.xlog.XLog
 import com.savegoldmaster.R
 import com.savegoldmaster.account.LoginActivity
 import com.savegoldmaster.account.UserUtil
-import com.savegoldmaster.base.BaseApplication
 import com.savegoldmaster.base.view.BaseMVPFragment
 import com.savegoldmaster.common.WebUrls
 import com.savegoldmaster.home.model.bean.*
 import com.savegoldmaster.home.presenter.Contract.HomeContract
 import com.savegoldmaster.home.presenter.HomePresenterImpl
 import com.savegoldmaster.home.view.adapter.HomeAdapter
-import com.savegoldmaster.utils.DateTimeUtil
-import com.savegoldmaster.utils.LocationUtils
-import com.savegoldmaster.utils.StringUtil
+import com.savegoldmaster.utils.*
 import com.savegoldmaster.utils.glide.GlideImageView
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
@@ -57,20 +51,9 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
 
     override fun initView(view: View?) {
 
-        var mPackageManager = BaseApplication.Companion.instance?.getPackageManager()
-        var mPackageInfo: PackageInfo;
-
-        try {
-            mPackageInfo = mPackageManager!!.getPackageInfo("com.savegoldmaster", 0);
-            var packageName = mPackageInfo.applicationInfo;
-//            ToastUtil.showMessage("应用市场信息"+packageName)
-            XLog.d("应用市场信息"+packageName)
-        } catch (e: PackageManager.NameNotFoundException) {
-
-            e.printStackTrace();
-        }
+        val channelName = ChannelUtil.getChannelName(activity)
 //        val channel = WalleChannelReader.getChannel(BaseApplication.instance.applicationContext)
-//        ToastUtil.showMessage("应用市场信息"+channel)
+        ToastUtil.showMessage("应用市场信息" + channelName)
 
         addEvent()
         //获取推送活动弹窗
