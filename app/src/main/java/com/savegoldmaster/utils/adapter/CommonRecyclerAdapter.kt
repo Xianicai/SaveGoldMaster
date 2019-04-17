@@ -48,7 +48,7 @@ abstract class CommonRecyclerAdapter<T>(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // 设置点击和长按事件
         holder.itemView.setOnClickListener { mItemClickListener?.onItemClick(position) }
-        holder.itemView.setOnLongClickListener { mLongClickListener?.onItemLongClick(position)!! }
+//        holder.itemView.setOnLongClickListener { mLongClickListener?.onItemLongClick(position) }
         conver(holder, mDatas[position])
     }
 

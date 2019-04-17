@@ -133,6 +133,10 @@ class WebUrls {
          *用户协议
          */
         const val USERAGREEMENT = "${BASE_URL}useragreement"
+        /**
+         *爱有金
+         */
+        const val AIYOUJIN = "${BASE_URL}aiyoujin"
 
     }
 }

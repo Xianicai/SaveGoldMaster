@@ -18,7 +18,9 @@ import com.savegoldmaster.home.model.bean.*
 import com.savegoldmaster.home.presenter.Contract.HomeContract
 import com.savegoldmaster.home.presenter.HomePresenterImpl
 import com.savegoldmaster.home.view.adapter.HomeAdapter
-import com.savegoldmaster.utils.*
+import com.savegoldmaster.utils.DateTimeUtil
+import com.savegoldmaster.utils.LocationUtils
+import com.savegoldmaster.utils.StringUtil
 import com.savegoldmaster.utils.glide.GlideImageView
 import com.savegoldmaster.utils.rxbus.EventConstant
 import com.savegoldmaster.utils.rxbus.RxBus
@@ -51,9 +53,9 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
 
     override fun initView(view: View?) {
 
-        val channelName = ChannelUtil.getChannelName(activity)
+//        val channelName = ChannelUtil.getChannelName(activity)
 //        val channel = WalleChannelReader.getChannel(BaseApplication.instance.applicationContext)
-        ToastUtil.showMessage("应用市场信息" + channelName)
+//        ToastUtil.showMessage("应用市场信息" + channelName)
 
         addEvent()
         //获取推送活动弹窗

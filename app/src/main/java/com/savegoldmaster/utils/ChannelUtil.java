@@ -4,7 +4,6 @@ package com.savegoldmaster.utils;
  * Created by Administrator on 2018/6/1.
  */
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -150,7 +149,7 @@ public class ChannelUtil {
         return -1;
     }
 
-    public static String getChannelName(Activity ctx) {
+    public static String getChannelName(Context ctx) {
         if (ctx == null) {
             return null;
         }

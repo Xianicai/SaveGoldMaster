@@ -56,7 +56,7 @@ class Urls {
         const val GET_NOTICE = "${BASE_URL}v3/member/queryMessage"
 
         /**
-         * 首页黄金回收信息
+         * 首页黄金回收订单信息
          */
         const val GET_GOLD_NEW_ODER = "${BASE_URL}v3/recycleOrder/newOrder"
     }

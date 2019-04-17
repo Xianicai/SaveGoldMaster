@@ -240,6 +240,7 @@
                       android:text="版本号1.0.8"
                       android:layout_marginBottom="20dp"
                       android:textColor="@color/black"
+                      android:visibility="gone"
                       android:layout_gravity="center_horizontal"/>
         </LinearLayout>
         <ImageView

@@ -21,12 +21,11 @@ import android.webkit.*;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.elvishew.xlog.XLog;
 import com.google.gson.Gson;
-import com.meituan.android.walle.WalleChannelReader;
 import com.savegoldmaster.R;
 import com.savegoldmaster.account.LoginActivity;
 import com.savegoldmaster.base.BaseApplication;
+import com.savegoldmaster.utils.ChannelUtil;
 import com.savegoldmaster.utils.LocationUtils;
 import com.savegoldmaster.utils.SharedPreferencesHelper;
 import com.savegoldmaster.utils.rxbus.EventConstant;
@@ -149,7 +148,6 @@ public class OutWebActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                XLog.d("网页加载进度" + newProgress + "%");
                 if (newProgress == 100) {
                     progressBar.setVisibility(View.GONE);
                 } else {
@@ -266,7 +264,8 @@ public class OutWebActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public String getSource() {
-            return WalleChannelReader.getChannel(getApplicationContext());
+//            return WalleChannelReader.getChannel(getApplicationContext());
+            return ChannelUtil.getChannelName(BaseApplication.Companion.getInstance());
         }
 
         @JavascriptInterface

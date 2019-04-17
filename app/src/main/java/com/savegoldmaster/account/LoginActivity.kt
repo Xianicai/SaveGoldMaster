@@ -18,13 +18,13 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
-import com.meituan.android.walle.WalleChannelReader
 import com.savegoldmaster.R
 import com.savegoldmaster.account.model.bean.LoginBean
 import com.savegoldmaster.account.presenter.LoginPresenterImpl
 import com.savegoldmaster.base.view.BaseMVPActivity
 import com.savegoldmaster.common.WebUrls
 import com.savegoldmaster.home.presenter.Contract.LoginContract
+import com.savegoldmaster.utils.ChannelUtil
 import com.savegoldmaster.utils.ConfirmDialog
 import com.savegoldmaster.utils.SharedPreferencesHelper
 import com.savegoldmaster.utils.ToastUtil
@@ -164,7 +164,8 @@ class LoginActivity : BaseMVPActivity<LoginPresenterImpl>(), LoginContract.Login
                     return
                 }
                 if (loginType == FASTER_LOGIN && password.length == 6) {
-                    val source = "ZYPT_#_ANDROID_appstore-${WalleChannelReader.getChannel(applicationContext)}"
+//                    val source = "ZYPT_#_ANDROID_appstore-${WalleChannelReader.getChannel(applicationContext)}"
+                    val source = "ZYPT_#_ANDROID_appstore-${ChannelUtil.getChannelName(this)}"
                     loginPresenterImpl?.fasterLogin(phoneNum, password, "", "", source)
                 } else if (loginType == ACCOUNT_LOGIN && password.length >= 6) {
                     loginPresenterImpl?.accountLogin(phoneNum, password)
