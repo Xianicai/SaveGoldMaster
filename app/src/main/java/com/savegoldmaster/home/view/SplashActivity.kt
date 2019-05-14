@@ -39,8 +39,7 @@ class SplashActivity : BaseMVPActivity<AppStartPresenterImpl>(), AppStartContrac
     private var firstOpened: Boolean = false
 
     private var presenter: AppStartPresenterImpl? = null
-
-
+    
     override fun getLayoutId(): Int {
         SharedPreferencesHelper(this, "AdBean").apply {
             adImageUrl = getSharedPreference("adImageUrl", "") as String?
