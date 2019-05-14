@@ -2,7 +2,6 @@ package com.savegoldmaster.home.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.os.CountDownTimer
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -12,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.savegoldmaster.R
 import com.savegoldmaster.account.LoginActivity
 import com.savegoldmaster.account.UserUtil
+import com.savegoldmaster.base.BaseApplication
 import com.savegoldmaster.base.view.BaseMVPFragment
 import com.savegoldmaster.common.WebUrls
 import com.savegoldmaster.home.model.bean.*
@@ -20,6 +20,7 @@ import com.savegoldmaster.home.presenter.HomePresenterImpl
 import com.savegoldmaster.home.view.adapter.HomeAdapter
 import com.savegoldmaster.utils.DateTimeUtil
 import com.savegoldmaster.utils.LocationUtils
+import com.savegoldmaster.utils.SharedPreferencesHelper
 import com.savegoldmaster.utils.StringUtil
 import com.savegoldmaster.utils.glide.GlideImageView
 import com.savegoldmaster.utils.rxbus.EventConstant
@@ -69,7 +70,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         listBean = ArrayList()
         mRecyclerView.isNestedScrollingEnabled = false
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        homeAdapter = HomeAdapter(listBean!!)
+        homeAdapter = HomeAdapter(listBean)
         mRecyclerView.adapter = homeAdapter
         val bottomView = layoutInflater.inflate(
             R.layout.layout_home_company_info, mRecyclerView.parent as ViewGroup, false
@@ -80,7 +81,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
         (bottomView.mLayoutKnowOur).setOnClickListener(this)
         (bottomView.mLayoutSafety).setOnClickListener(this)
         mScrollView.setOnScrollListener { scrollY ->
-            if (px2dp(context!!, scrollY) > 48) {
+            if (px2dp(activity!!, scrollY) > 48) {
                 mLayoutTopTab.visibility = View.VISIBLE
             } else {
                 mLayoutTopTab.visibility = View.GONE
@@ -218,6 +219,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     fun buildBanner(bannerBean: BannerBean) {
         val views = mutableListOf<GlideImageView>()
         val imageUrls = mutableListOf<XBannerBean>()
+        var fromUrl = if (WebUrls.BASE_URL == "https://app.au32.cn/") "app.au32.cn" else "app-test.au32.cn"
         for (i in 0 until bannerBean.content.size) {
             val mImageView = GlideImageView(context)
             mImageView.setDefaultImage(R.mipmap.ic_launcher)
@@ -236,7 +238,19 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
             }
             setOnItemClickListener { banner, model, view, position ->
                 if (StringUtil.isNotEmpty(bannerBean.content[position].hrefUrl)) {
-                    OutWebActivity.start(context, bannerBean.content[position].hrefUrl)
+                    val preferencesHelper = SharedPreferencesHelper(BaseApplication.instance, "UserBean")
+                    val token = preferencesHelper.getSharedPreference("token", "").toString().trim()
+                    val userId = preferencesHelper.getSharedPreference("userId", "").toString().trim()
+                    var urlToken =
+                        bannerBean.content[position].hrefUrl + "?fromUrl=" + fromUrl + "&token="
+                    if (UserUtil.isLogin()) {
+                        urlToken =
+                            bannerBean.content[position].hrefUrl + "?fromUrl=" + fromUrl + "&token=" + userId + "_" + token
+                    }
+                    OutWebActivity.start(
+                        context,
+                        urlToken
+                    )
                 }
             }
         }
@@ -270,7 +284,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     fun buildOrderTime(userOderBean: UserOderBean): UserOderBean {
         for (i in 0 until userOderBean.content.size) {
             userOderBean.content[i].createTime =
-                    DateTimeUtil.getTime(DateTimeUtil.dateToStamp(userOderBean.content[i].createTime))
+                DateTimeUtil.getTime(DateTimeUtil.dateToStamp(userOderBean.content[i].createTime))
         }
         return userOderBean
     }
@@ -281,7 +295,7 @@ class HomeFragment : BaseMVPFragment<HomePresenterImpl>(), HomeContract.HomeView
     }
 
     //将px转换为dp
-    fun px2dp(context: Context, pxValue: Int): Int {
+    fun px2dp(context: Activity, pxValue: Int): Int {
         val scale = context.resources.displayMetrics.density
         return (pxValue / scale + 0.5f).toInt()
     }

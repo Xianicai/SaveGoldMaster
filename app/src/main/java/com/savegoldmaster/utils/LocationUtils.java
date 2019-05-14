@@ -44,14 +44,11 @@ public class LocationUtils {
         List<String> providers = locationManager.getProviders(true);
         if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
 //如果是网络定位
-            XLog.d("如果是网络定位");
             locationProvider = LocationManager.NETWORK_PROVIDER;
         } else if (providers.contains(LocationManager.GPS_PROVIDER)) {
 //如果是GPS定位
-            XLog.d("如果是GPS定位");
             locationProvider = LocationManager.GPS_PROVIDER;
         } else {
-            XLog.d("没有可用的位置提供器");
             return;
         }
 // 需要检查权限,否则编译报错,想抽取成方法都不行,还是会报错。只能这样重复 code 了。
@@ -75,7 +72,6 @@ public class LocationUtils {
     private void setLocation(Location location) {
         this.location = location;
         String address = "纬度：" + location.getLatitude() + "经度：" + location.getLongitude();
-        XLog.d(address);
     }
     //获取经纬度
 

@@ -166,7 +166,7 @@ class HomeAdapter(private var datas: ArrayList<Any>) : RecyclerView.Adapter<Recy
             for (i in 0 until userOderBean.content.size) {
                 val contentBean = userOderBean.content[i]
                 val view = LayoutInflater.from(itemView.context).inflate(R.layout.layout_order_text, null, false)
-                var text = "${contentBean.createTime},${contentBean.username}的黄金估计${contentBean.amount}元"
+                var text = "${contentBean.createTime},${contentBean.username}的黄金估价${contentBean.amount}元"
                 view.mTvOrderMsg.text = SpannableStringBuilder(text).apply {
                     setSpan(
                         ForegroundColorSpan(ContextCompat.getColor(itemView.context, R.color.color_EDA835)),

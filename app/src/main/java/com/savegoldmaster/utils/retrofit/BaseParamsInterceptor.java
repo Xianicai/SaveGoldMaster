@@ -41,7 +41,7 @@ public class BaseParamsInterceptor implements Interceptor {
         HttpUrl.Builder builder = oldRequest.url()
                 .newBuilder()
                 .setEncodedQueryParameter("client_sys", "android")
-                .setEncodedQueryParameter("version", "1.0.0");
+                .setEncodedQueryParameter("version", "1.0.3");
 
         Request newRequest = oldRequest.newBuilder()
                 .method(oldRequest.method(), oldRequest.body())
